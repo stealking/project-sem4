@@ -1,24 +1,29 @@
 <template>
-  <el-row>
-    <el-col :span="8" :offset="8">
+  <el-row :gutter="20">
+    <el-col :span="12" :offset="6">
       <div class="right-side-content">
         <div class="panel" style="margin-top: 20px; background-color: white; padding: 10px">
-          <h4 class="text-center">Quick Register</h4>
+          <h2 class="text-center">Register</h2>
           <el-row :gutter="20">
-            <el-col :span="24">
-              <div class="detail-content text-center">
-                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-                  <el-form-item  prop="email">
-                    <el-input v-model="ruleForm.email" placeholder="Email"></el-input>
+            <el-col :span="18">
+              <div class="detail-content">
+                <el-form :model="ruleForm" label-width="100px" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                  <el-form-item label="Email" prop="email">
+                    <el-input v-model="ruleForm.email"></el-input>
                   </el-form-item>
-                  <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username" placeholder="Username"></el-input>
+                  <el-form-item label="Username" prop="username">
+                    <el-input v-model="ruleForm.username"></el-input>
                   </el-form-item>
-                  <el-form-item prop="pass">
-                    <el-input type="password" v-model="ruleForm.pass" auto-complete="off" placeholder="Password"></el-input>
+                  <el-form-item label="Password" prop="pass">
+                    <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
                   </el-form-item>
+                  <el-form-item label="Confirm" prop="checkPass">
+                    <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
+                  </el-form-item>
+                  
                   <el-form-item>
                     <el-button type="success" @click="submitForm('ruleForm')">Submit</el-button>
+                    <el-button type="default" @click="resetForm('ruleForm')">Reset</el-button>
                   </el-form-item>
                 </el-form>
               </div>
@@ -85,11 +90,42 @@ export default {
           { required: true, validator: validatePass, trigger: 'blur' },
           { min: 6, message: 'Length should be min 6', trigger: 'blur' },
         ],
+        checkPass: [
+          { required: true, validator: validatePass2, trigger: 'blur' },
+          { min: 6, message: 'Length should be min 6', trigger: 'blur' },
+        ],
+        firstName: [
+          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
+        ],
+        lastName: [
+          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
+        ],
+        address: [
+          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
+        ],
+        // phone: [
+        //   { validator: checkPhone, trigger: 'blur' },
+        // ],
       },
     };
   },
   methods: {
-    
+    handleAvatarSuccess(res, file) {
+      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
+      this.fileImage = file.raw;
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg';
+      const isLt2M = file.size / 1024 / 1024 < 2;
+
+      if (!isJPG) {
+        this.$message.error('Avatar picture must be JPG format!');
+      }
+      if (!isLt2M) {
+        this.$message.error('Avatar picture size can not exceed 2MB!');
+      }
+      return isJPG && isLt2M;
+    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -134,7 +170,6 @@ export default {
 
 </script>
 <style scope>
-
 .right-side-content {
   padding: 0 10px 0 10px;
 }
@@ -150,6 +185,53 @@ export default {
   border: 1px solid #dcdcdc;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
   border-radius: 4px;
+}
+
+.sc-table .action-list .el-button {
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #c4c4c4;
+  color: #1f2d3d;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.avatar-content {
+  padding: 0 10px 10px 10px;
+  margin-top: 10px;
+  text-align: center;
+  /* box-shadow: 0 2px 18px #E5E5E5; */
+}
+
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #20a0ff;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  line-height: 178px;
+  text-align: center;
+}
+
+.avatar {
+  width: 178px;
+  height: 178px;
+  display: block;
 }
 
 .text-center {

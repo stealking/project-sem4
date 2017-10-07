@@ -7,32 +7,6 @@ div.contain
       el-carousel.carousel-layout(:interval='3000', arrow='never' indicator-position='none' height="100vh")
         el-carousel-item(v-for='item in items', :key='item.src')
           img.carousel-img(:src="item.src")
-    <!--section-->
-      <!--.wrapper-->
-        <!--v-container(grid-list-xl)-->
-          <!--v-layout(row wrap align-center light)-->
-            <!--v-flex(xs12 md12 light)-->
-              <!--h3.white&#45;&#45;text TÌM TOUR-->
-            <!--v-flex(xs12 md3 light)-->
-              <!--v-layout.select-layout-->
-                <!--v-flex(xs2)-->
-                  <!--v-icon.white&#45;&#45;text people-->
-                <!--v-flex(xs10)-->
-                  <!--v-select(dark v-bind:items='states', v-model='e1', label='Loại tour', single-line, auto, hide-details)-->
-            <!--v-flex(xs12 md3 light)-->
-              <!--v-layout.select-layout-->
-                <!--v-flex(xs2)-->
-                  <!--v-icon.white&#45;&#45;text fa-map-marker-->
-                <!--v-flex(xs10)-->
-                  <!--v-select(dark v-bind:items='states', v-model='e1', label='Điểm đến', single-line, auto, hide-details)-->
-            <!--v-flex(xs12 md3 light)-->
-              <!--v-layout.select-layout-->
-                <!--v-flex(xs2)-->
-                  <!--v-icon.white&#45;&#45;text fa-calendar-->
-                <!--v-flex(xs10)-->
-                  <!--v-select(dark v-bind:items='states', v-model='e1', label='Thời gian', single-line, auto, hide-details)-->
-            <!--v-flex(xs12 md3 light)-->
-              <!--v-btn.select-layout.search-button.white&#45;&#45;text.teal.darken-3(large) Tìm kiếm-->
     section.wrapper
       v-container(grid-list-xl)
         v-tabs.tabs-layout(dark, v-model='active'   :scrollable="false")
@@ -65,15 +39,18 @@ div.contain
                   v-btn.select-layout.search-button.white--text.teal.darken-3(large) Tìm kiếm
 
     HomeBody
+  _Footer
 </template>
 <script>
 import _ from 'lodash';
 import Navigator from './Navigator';
 import HomeBody from './Home.Body';
+import Info from '../_reused/Info.vue';
+import Footer from '../_reused/Footer.vue';
 
 export default {
   name: 'hello',
-  components: { Navigator, HomeBody },
+  components: { Navigator, HomeBody, Info, _Footer: Footer },
   data() {
     return {
       e1: null,
@@ -147,16 +124,18 @@ export default {
   background-color rgba(0,0,0,0)
   @media(max-width: 960px)
     top 25%
-.flex
-  padding-top 0px!important
-  padding-bottom 0px!important
+@media(max-width: 600px)
+  .flex
+    padding-top 0px!important
+    padding-bottom 0px!important
 i.icon
   font-size 30px!important
   padding-top 18px!important
 .select-layout
   margin: 0px!important;
-  .flex
-    padding 0px!important
+  /*@media(min-width: 960px)*/
+    /*.flex*/
+      /*padding 0px!important*/
 .search-button
   margin-top 20px!important
   margin-bottom 10px!important
@@ -179,4 +158,8 @@ i.icon
 .tabs-bar-layout
   border-top-right-radius 5px
   border-top-left-radius 5px
+
+@media only screen and (min-width: 600px)
+  .container
+    max-width 100%
 </style>

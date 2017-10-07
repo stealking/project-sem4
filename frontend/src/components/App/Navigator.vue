@@ -17,9 +17,9 @@ div
         v-list-tile-content
           v-list-tile-title {{ item.title }}
   v-toolbar.white.toolbar-layout(:fixed="shouldAbsolute()===false" :absolute="shouldAbsolute()===true" dark)
-    v-toolbar-side-icon.hidden-sm-and-up(@click.stop='drawer = !drawer')
+    v-toolbar-side-icon.hidden-m-and-up(@click.stop='drawer = !drawer')
     v-toolbar-title Toolbar
-    v-toolbar-items.hidden-xs-only.toolbar-items-layout
+    v-toolbar-items.hidden-sm-and-down.toolbar-items-layout
       v-menu(v-for='(menu,key) in menus' transition='scale-transition' offset-y :key='key')
         v-btn(flat slot='activator')
           v-icon {{menu.header.icon}}
@@ -121,5 +121,6 @@ ul.list
 i.icon
   font-size 25px
 .drawer-layout
-  z-index 10
+  z-index 100
+  position: fixed
 </style>

@@ -20,6 +20,7 @@
             <el-form-item prop="pass">
               <el-input type="password" v-model="ruleForm.pass" class="pass" placeholder="Password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
             </el-form-item>
+            <!-- <input placeholder="Password" name="Password" class="pass" type="password" required="" v-model="credentials.password" v-on:keyup.enter="submitForm()"> -->
             <span class="icon2">
               <i class="fa fa-unlock" aria-hidden="true"></i>
             </span>
@@ -31,12 +32,16 @@
             <div class="right-w3l" style="text-align: center">
               <el-form-item>
                 <el-button @click="submitForm('ruleForm')">Login</el-button>
+                <!-- <el-button @click="resetForm('ruleForm')">Reset</el-button> -->
               </el-form-item>
+              <!-- <input type="submit" value="Login" @click="submitForm()"> -->
             </div>
           </div>
         </el-form>
       </div>
     </div>
+    <!--//main-->
+
   </div>
 </template>
 

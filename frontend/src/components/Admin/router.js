@@ -40,6 +40,17 @@ export default [
     path: '/pages',
     name: 'Pages',
     component: Pages,
+    beforeEnter: (to, from, next) => {
+      auth.checkAuth();
+      if (auth.user.authenticated) {
+        next({
+          path: '/admin',
+          query: { redirect: to.path },
+        });
+      } else {
+        next();
+      }
+    },
     children: [
       {
         path: '/pages/register',
@@ -50,18 +61,6 @@ export default [
         path: '/pages/login',
         name: 'Login',
         component: Login,
-        beforeEnter: (to, from, next) => {
-          auth.checkAuth();
-          console.log(auth.user.authenticated);
-          if (auth.user.authenticated) {
-            next({
-              path: '/admin',
-              query: { redirect: to.path },
-            });
-          } else {
-            next();
-          }
-        },
       },
     ],
   },

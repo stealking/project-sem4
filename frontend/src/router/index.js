@@ -5,7 +5,6 @@ import adminRouteConfig from '@/components/Admin/router';
 import appRouteConfig from '@/components/App/router';
 
 Vue.use(Router);
-
 export default new Router({
   mode: 'history',
   routes: [

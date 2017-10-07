@@ -1,0 +1,539 @@
+import axios from 'axios';
+// import auth from '../../auth';
+// import router from '../../router';
+
+const url = 'http://localhost:8080';
+
+export default {
+  changePage(page, type, paging, sort, column, field, value) {
+    let link = '';
+    if (column === undefined || column === null) column = '';
+    if ((field !== undefined || field !== null || field !== '')) {
+      link = `${url}/custom-api/${type}?${field}=${value}&page=${page}&paging=${paging}&sort=${sort}&column=${column}`;
+    } else {
+      link = `${url}/custom-api/${type}?page=${page}&paging=${paging}&sort=${sort}&column=${column}`;
+    }
+    console.log(link);
+    return fetch(`${link}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+
+  // user services
+  findAllUser() {
+    return fetch(`${url}/custom-api/users?page=1&paging=10&sort=asc&column=id`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+
+  getUserById(id) {
+    return fetch(`${url}/custom-api/users/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      return response.json();
+    }).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+
+  getUserInfo() {
+    return axios({
+      method: 'get',
+      url: `${url}/api/user`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      return response.data;
+    });
+  },
+
+  updateUser(profileUser, image) {
+    const user = JSON.stringify(profileUser);
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('content', user);
+    return axios({
+      method: 'patch',
+      url: `${url}/custom-api/users`,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  deleteUser(id) {
+    return axios({
+      method: 'delete',
+      url: `${url}/custom-api/users/${id}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  createUser(user) {
+    const newUser = JSON.stringify(user);
+    const formData = new FormData();
+    formData.append('content', newUser);
+    return axios({
+      method: 'post',
+      url: `${url}/custom-api/users`,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  changePassword(passwordConfirm) {
+    var content = JSON.stringify(passwordConfirm);
+    return axios({
+      method: 'patch',
+      url: `${url}/custom-api/users/change-password`,
+      data: content,
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      return response;
+    }).catch(err => {
+      return err.response;
+    });
+  },
+
+  checkEmail(email) {
+    return axios({
+      method: 'post',
+      url: `${url}/check-email`,
+      data: { email },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response === null || response === undefined) {
+        return true;
+      }
+      return false;
+    });
+  },
+
+  findByEmail(email) {
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/users/findByEmail?email=${email}&page=1&paging=10&sort=asc&column=id`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    });
+  },
+
+  findByUsername(username) {
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/users/findByUsername?username=${username}&page=1&paging=10&sort=asc&column=id`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    });
+  },
+  findByAddress(address) {
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/users/findByAddress?address=${address}&page=1&paging=10&sort=asc&column=id`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    });
+  },
+  findByPhone(phone) {
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/users/findByPhone?phone=${phone}&page=1&paging=10&sort=asc&column=id`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    });
+  },
+  //end user services
+
+  //tour serivces
+  getAllTour() {
+    return fetch(`${url}/custom-api/tours?page=1&paging=10&sort=asc&column=id`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  getTourById(id) {
+    return fetch(`${url}/custom-api/tours/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      return response.json();
+    }).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+
+  updateTour(tour, image) {
+    const newTour = JSON.stringify(tour);
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('content', newTour);
+    return axios({
+      method: 'patch',
+      url: `${url}/custom-api/tours`,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  createTour(tour, image) {
+    const newTour = JSON.stringify(tour);
+    const formData = new FormData();
+    formData.append('content', newTour);
+    formData.append('file', image);
+    return axios({
+      method: 'post',
+      url: `${url}/custom-api/tours`,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  deleteTour(id) {
+    return axios({
+      method: 'delete',
+      url: `${url}/custom-api/tours/${id}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  findTourByDepPointAndDes(depPoint, des, page, paging, sort, column) {
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/tours/findTourByDepPointAndDes?from=${depPoint}&to=${des}&page=${page}&paging=${paging}&sort=${sort}&column=${column}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    });
+  },
+  findTour(depPoint, des, tourTypeId, page, paging, sort, column) {
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/tours/findTour?from=${depPoint}&to=${des}&tourTypeId=${tourTypeId}&page=${page}&paging=${paging}&sort=${sort}&column=${column}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        return false;
+      }
+      return response.data;
+    });
+  },
+  //end tour services
+
+  //tour detail services
+  getTourDetailsById(id) {
+    return fetch(`${url}/custom-api/tourDetails/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      return response.json();
+    }).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+
+  getTourDetailsByTourId(id) {
+    return fetch(`${url}/custom-api/tourDetails-by-tours?tour_id=${id}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      return response.json();
+    }).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  createTourDetails(tourDetails) {
+    const newTourDetail = JSON.stringify(tourDetails);
+    return axios({
+      method: 'post',
+      url: `${url}/custom-api/tourDetails`,
+      data: newTourDetail,
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+  updateTourDetails(tourDetails) {
+    const newTour = JSON.stringify(tourDetails);
+    return axios({
+      method: 'patch',
+      url: `${url}/custom-api/tourDetails`,
+      data: newTour,
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+  deleteTourDetails(id) {
+    return axios({
+      method: 'delete',
+      url: `${url}/custom-api/tourDetails/${id}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  changePageTourDetails(page, tourid, paging, sort, column) {
+    column = column || "";
+    return fetch(`${url}/custom-api/tourDetails-by-tours?tour_id=${tourid}&page=${page}&paging=${paging}&sort=${sort}&column=${column}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+
+  //end tour detail services
+
+  //Voucher services
+  getAllVoucher() {
+    return fetch(`${url}/custom-api/vouchers?page=1&paging=10&sort=asc&column=id`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  findAllVouchers() {
+    return fetch(`${url}/custom-api/getAllVouchers`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  getVoucherById(id) {
+    return fetch(`${url}/custom-api/vouchers/${id}`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      return response.json();
+    }).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  updateVoucher(voucher, image) {
+    const newVoucher = JSON.stringify(voucher);
+    const formData = new FormData();
+    formData.append('file', image);
+    formData.append('content', newVoucher);
+    return axios({
+      method: 'patch',
+      url: `${url}/custom-api/vouchers`,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+  createVoucher(voucher, image) {
+    const newVoucher = JSON.stringify(voucher);
+    const formData = new FormData();
+    formData.append('content', newVoucher);
+    formData.append('file', image);
+    return axios({
+      method: 'post',
+      url: `${url}/custom-api/vouchers`,
+      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+
+  deleteVoucher(id) {
+    return axios({
+      method: 'delete',
+      url: `${url}/custom-api/vouchers/${id}`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then(response => response);
+  },
+  searchVoucher(search) {
+    return fetch(`${url}/custom-api/vouchers/findVoucher?search=${search}&page=1&paging=10&sort=asc&column=id`, {
+      method: 'get',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  //End voucher services
+
+};

@@ -1,0 +1,105 @@
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+upload-dir
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+
+
+*.sw?
+.#*
+*#
+*~
+/build
+/code
+.metadata
+.recommenders
+bin
+build
+lib/
+target
+interpolated*.xml
+dependency-reduced-pom.xml
+build.log
+_site/
+.*.md.html
+manifest.yml
+MANIFEST.MF
+settings.xml
+activemq-data
+overridedb.*
+.DS_Store
+dump.rdb
+transaction-logs
+
+
+
+# Java Generated
+*.class
+*.war
+*.ear
+
+# other
+
+# gradle
+bin/
+npm-debug.log.*
+
+# OS generated files
+
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Spring Generated
+
+
+# Eclipse Generated
+
+.settings/
+.metadata/
+target/
+
+# IntelliJ Generated
+
+
+# Front End Dependency Generated
+frontend/.sass-cache/
+frontend/bower_components/
+frontend/dist/
+frontend/node/
+frontend/node_modules/
+frontend/npm-debug.log
+frontend/.tscache/
+frontend/scss/.tmp/
+frontend/js/lib/
+frontend/typings/
+frontend/coverage/
+.sh
+backend/out/production/classes/
+!frontend/build

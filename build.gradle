@@ -1,0 +1,16 @@
+// root build.gradle
+
+// gradle wrapper
+task wrapper(type: Wrapper) {
+	gradleVersion = '3.4'
+}
+
+task bundleCopy(dependsOn: ':frontend:bundle') {
+	doLast{
+		copy {
+			from "${projectDir}/frontend/dist"
+			into "${projectDir}/backend/src/main/resources/static"
+			print "done copy"
+		}
+	}
+}

@@ -7,7 +7,7 @@ import VueResource from 'vue-resource';
 
 Vue.use(VueResource);
 Vue.use(Router);
-//fasdsfd
+//fasdsfdc
 export default new Router({
   mode: 'history',
   routes: [

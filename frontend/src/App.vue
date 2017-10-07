@@ -24,6 +24,8 @@ html
   background-color black!important
 .toolbar
   z-index 30
+[type=number]
+  width 100%
 body
   width 100%
   height 100%
@@ -45,7 +47,6 @@ p
   flex-direction column
 
 .design
-  flex 1
   display flex
   flex-direction column
   justify-content center
@@ -54,7 +55,8 @@ p
 .text
   text-align center
   vertical-align center
-
+.bold
+  font-weight bold
 .shadow
   box-shadow 0 1px 5px rgba(0,0,0,.2), 0 2px 2px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12)
 .button
@@ -69,6 +71,8 @@ p
   align-items center
   border-radius 3px
   line-height 1rem
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
   &:hover
     background-color var(--main-color-dark)
 
@@ -82,6 +86,8 @@ p
 .center
   justify-content center
   align-items center
+.sa
+  justify-content space-around
 .rowStart
   flex-direction row
   justify-content flex-start
@@ -91,15 +97,32 @@ p
 .row600
   @media (min-width: 600px)
     flex-direction row
+.fw
+  flex-wrap wrap
+.sd
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+.tsd
+  text-shadow 1px 1px 2px #000000;
+._card
+  width 320px
 
 eval(i)
   if i == 0
     return initial!important
   return i rem
 
-for i in (0..5)
+evals(i)
+  if i == 0
+    return initial!important
+  return (0.25 * i) rem
+
+for i in (20..0)
   .f{i}
     flex i
+  .s{i}
+    font-size evals(i)
   .m{i}
     margin eval(i)
   .mt{i}
@@ -122,4 +145,10 @@ for i in (0..5)
   .pl{i}
     padding-left eval(i)
 
+.removeYPaddingYMarginOnVeryNarrow
+  @media (max-width: 400px)
+    padding-left 0
+    padding-right 0
+    margin-right 0
+    margin-left  0
 </style>

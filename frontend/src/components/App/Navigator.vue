@@ -34,20 +34,34 @@ div
       v-menu(transition='scale-transition' offset-y)
         v-btn(flat slot='activator')
           v-icon people
-        v-list
-          v-list-tile(v-for='item in menus.bookTourMenu.items', :key='item.title', @click='navigate(item.click)')
+        v-list(v-if="authenticated === true")
+          v-list-tile(v-for='item in userMenu.items', :key='item.title', @click='navigate(item.click)')
             v-list-tile-action
               v-icon {{ item.icon }}
             v-list-tile-content
               v-list-tile-title {{ item.title }}
-
+        v-list(v-if="authenticated === false")
+          v-list-tile(v-for='item in userMenu2.items', :key='item.title', @click='navigate(item.click)')
+            v-list-tile-action
+              v-icon {{ item.icon }}
+            v-list-tile-content
+              v-list-tile-title {{ item.title }}
 </template>
 
 <script>
 import router from '../../router'
+import auth from '../../auth/index'
+import services from '../Admin/services'
 
 export default {
   name: 'hello',
+  mounted() {
+    auth.checkAuth();
+    this.authenticated = auth.user.authenticated;
+    services.getUserInfo().then((response) => {
+      console.log(response);
+    })
+  },
   methods: {
     shouldAbsolute(){
       if(router.currentRoute.path === '/') return true;
@@ -63,13 +77,46 @@ export default {
 //      console.log('Closed: ' + ref);
     },
     navigate(content) {
-      console.log(content);
+      switch(content){
+        case 1: 
+          router.push({ name: 'Register'})
+          break;
+        case 2:
+          router.push({ name: 'UserInfo' })
+          break;
+        case 3:
+          auth.logout();
+          window.location.reload();
+          break;
+        case 4:
+          router.push({ name: 'Login' })
+          break;
+        default:
+          break;
+      }
     },
   },
   data() {
     return {
       drawer: null,
       header: 'Header',
+      authenticated: false,
+      isAdmin: false,
+      userMenu: {
+        header: { title: 'User', icon: 'fa-user' },
+        items: [
+          { title: 'Register', icon: 'fa-registered', click: 1 },
+          { title: 'Account info', icon: 'fa-address-card', click: 2 },
+          { title: 'Log out', icon: 'fa-sign-out', click: 3 },
+        ],
+      },
+      userMenu2: {
+        header: { title: 'User', icon: 'fa-user' },
+        items: [
+          { title: 'Login', icon: 'fa-sign-in', click: 4 },
+          { title: 'Register', icon: 'fa-registered', click: 1 },
+        ],  
+      },
       menus: {
         bookTourMenu: {
           header: { title: 'Đặt tour', icon: 'fa-fire' },
@@ -99,6 +146,9 @@ export default {
             { title: 'Liên hệ', icon: 'fa-question-circle-o', click: 3.0 },
             { title: 'Góp ý', icon: 'question_answer', click: 3.1 },
           ],
+        },
+        admin: {
+          header: {title: 'Admin', icon: 'fa-users', click: 4.0},   
         },
       },
       right: null,

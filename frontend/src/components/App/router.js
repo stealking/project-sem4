@@ -5,6 +5,7 @@ import TourDetail from '@/components/App/TourDetail';
 export default [
   {
     path: '/',
+    name: Home,
     component: Home,
     // redirect: 'tour'
   }, {

@@ -29,7 +29,7 @@ export default {
       this.user.authenticated = true;
       // rediect to specified route
       if (redirect) {
-        router.push({ name: redirect });
+        router.push({ path: '/' });
       }
       return response;
     }).catch(e => e);
@@ -37,7 +37,6 @@ export default {
   logout() {
     localStorage.removeItem('access_token');
     this.user.authenticated = false;
-    router.push({ name: 'Login' });
   },
   checkAuth() {
     const jwt = localStorage.getItem('access_token');

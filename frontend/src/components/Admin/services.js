@@ -75,7 +75,7 @@ export default {
   getUserInfo() {
     return axios({
       method: 'get',
-      url: `${url}/api/user`,
+      url: `${url}/custom-api/user`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
@@ -112,6 +112,7 @@ export default {
 
   createUser(user) {
     const newUser = JSON.stringify(user);
+    console.log(newUser);
     const formData = new FormData();
     formData.append('content', newUser);
     return axios({
@@ -152,9 +153,9 @@ export default {
       },
     }).then((response) => {
       if (response === null || response === undefined) {
-        return true;
+        return false;
       }
-      return false;
+      return true;
     });
   },
 

@@ -1,5 +1,6 @@
 import Home from '@/components/App/Home';
 import Tour from '@/components/App/Tour';
+import Tours from '@/components/App/Tours';
 import TourDetail from '@/components/App/TourDetail';
 
 export default [
@@ -8,10 +9,13 @@ export default [
     component: Home,
     // redirect: 'tour'
   }, {
-    path: '/tour',
+    path: '/tours',
+    component: Tours,
+  },{
+    path: '/tours/:tourId',
     component: Tour,
   },{
-    path: '/tour/:tourId',
+    path: '/tours/:tourId/tour-details/:tourDetailId',
     component: TourDetail,
   },
 ];

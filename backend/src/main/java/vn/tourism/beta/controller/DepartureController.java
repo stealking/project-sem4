@@ -11,12 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-import vn.tourism.beta.entity.TourType;
+import vn.tourism.beta.entity.Departure;
 import vn.tourism.beta.entity.User;
-import vn.tourism.beta.repository.TourTypeRepository;
+import vn.tourism.beta.repository.DepartureRepository;
 import vn.tourism.beta.repository.UserRepository;
 import vn.tourism.beta.security.JwtTokenUtil;
-import vn.tourism.beta.service.TourTypeService;
 import vn.tourism.beta.storage.StorageService;
 import vn.tourism.beta.utils.JSONUtils;
 
@@ -24,17 +23,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @RestController
-public class TourTypeController {
+public class DepartureController {
     private final Log logger = LogFactory.getLog(this.getClass());
     private final StorageService storageService;
 
     @Autowired
-    public TourTypeController(StorageService storageService) {
+    public DepartureController(StorageService storageService) {
         this.storageService = storageService;
     }
 
     @Autowired
-    private TourTypeRepository tourTypeRepository;
+    private DepartureRepository departureRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -49,8 +48,8 @@ public class TourTypeController {
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
-    @GetMapping(value = "custom-api/tourTypes")
-    public ResponseEntity<?> getAllTourType(
+    @GetMapping(value = "custom-api/departures")
+    public ResponseEntity<?> getAllDeparture(
             HttpServletRequest request,
             @RequestParam(name = "page", defaultValue = "1") int pageNumber,
             @RequestParam(name = "sort", defaultValue = "asc") String sort,
@@ -62,12 +61,12 @@ public class TourTypeController {
         if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
 
         PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-        Iterable<TourType> tourTypes = tourTypeRepository.findAllByEnableEquals(pageRequest, true);
+        Iterable<Departure> departures = departureRepository.findAllByEnableEquals(pageRequest, true);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         try {
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tourTypes), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(departures), responseHeaders, HttpStatus.OK);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -77,11 +76,11 @@ public class TourTypeController {
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
-    @GetMapping(value = "custom-api/tourTypes-count")
-    public ResponseEntity<?> getAllTourType() {
+    @GetMapping(value = "custom-api/departures-count")
+    public ResponseEntity<?> getAllDeparture() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
-        Long amount = tourTypeRepository.countAllByEnableEquals(true);
+        Long amount = departureRepository.countAllByEnableEquals(true);
         try {
             return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(amount), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
@@ -92,24 +91,24 @@ public class TourTypeController {
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
-    @GetMapping(value = "custom-api/tourTypes/{id}")
-    public ResponseEntity<?> getTourTypeById(
+    @GetMapping(value = "custom-api/departures/{id}")
+    public ResponseEntity<?> getDepartureById(
             @PathVariable("id") Long id
     ) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
-        TourType tourType = tourTypeRepository.findByIdAndEnableEquals(id, true);
+        Departure departure = departureRepository.findByIdAndEnableEquals(id, true);
         try {
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tourType), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(departure), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @ResponseBody
-    @PostMapping(value = "custom-api/tourTypes")
-    public ResponseEntity<?> addNewTourType(
-            @RequestBody TourType tourType,
+    @PostMapping(value = "custom-api/departures")
+    public ResponseEntity<?> addNewDeparture(
+            @RequestBody Departure departure,
             HttpServletRequest request
     ) {
         String header = request.getHeader("Authorization");
@@ -118,11 +117,11 @@ public class TourTypeController {
         User updateBy = userRepository.findByUsername(username);
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
-            tourType.setUpdatedOn(new Date());
-            tourType.setUpdatedBy(updateBy);
-            TourType addTourType = tourTypeRepository.save(tourType);
+            departure.setUpdatedOn(new Date());
+            departure.setUpdatedBy(updateBy);
+            Departure addDeparture = departureRepository.save(departure);
             responseHeaders.set("Content-Type", "application/json");
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(addTourType), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(addDeparture), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -130,9 +129,9 @@ public class TourTypeController {
     }
 
     @ResponseBody
-    @PatchMapping(value = "custom-api/tourTypes")
-    public ResponseEntity<?> updateTourTypeById(
-            @RequestBody TourType tourType,
+    @PatchMapping(value = "custom-api/departures")
+    public ResponseEntity<?> updateDepartureById(
+            @RequestBody Departure departure,
             HttpServletRequest request
     ) {
         String header = request.getHeader("Authorization");
@@ -141,11 +140,11 @@ public class TourTypeController {
         User updateBy = userRepository.findByUsername(username);
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
-            tourType.setUpdatedOn(new Date());
-            tourType.setUpdatedBy(updateBy);
-            TourType updatedTourType = tourTypeRepository.save(tourType);
+            departure.setUpdatedOn(new Date());
+            departure.setUpdatedBy(updateBy);
+            Departure updatedDeparture = departureRepository.save(departure);
             responseHeaders.set("Content-Type", "application/json");
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(updatedTourType), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(updatedDeparture), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -155,17 +154,17 @@ public class TourTypeController {
 
 
     @ResponseBody
-    @DeleteMapping(value = "custom-api/tourTypes/{id}")
-    public ResponseEntity<?> deleteTourTypeById(
+    @DeleteMapping(value = "custom-api/departures/{id}")
+    public ResponseEntity<?> deleteDepartureById(
             @PathVariable("id") Long id
     ) {
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
-            TourType tourType = tourTypeRepository.findByIdAndEnableEquals(id, true);
-            tourType.setEnable(false);
-            tourTypeRepository.save(tourType);
+            Departure departure = departureRepository.findByIdAndEnableEquals(id, true);
+            departure.setEnable(false);
+            departureRepository.save(departure);
             responseHeaders.set("Content-Type", "application/json");
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tourType), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(departure), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             responseHeaders.set("MyResponseHeader", "MyValue");

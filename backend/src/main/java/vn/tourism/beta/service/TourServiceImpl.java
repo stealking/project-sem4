@@ -26,9 +26,9 @@ public class TourServiceImpl implements TourService{
         if(tour.getTourType() != null)TourDb.setTourType(tour.getTourType());
         if(tour.getJourney() != null)TourDb.setJourney(tour.getJourney());
         if(tour.getImage() != null)TourDb.setImage(tour.getImage());
-        if(tour.getDepartmentPoint() != null)TourDb.setDepartmentPoint(tour.getDepartmentPoint());
+//        if(tour.getDepartmentPoint() != null)TourDb.setDepartmentPoint(tour.getDepartmentPoint());
         if(tour.getTotalTime() != null)TourDb.setTotalTime(tour.getTotalTime());
-        if(tour.getDestination() != null)TourDb.setDestination(tour.getDestination());
+//        if(tour.getDestination() != null)TourDb.setDestination(tour.getDestination());
         if(tour.getTransport() != null)TourDb.setTransport(tour.getTransport());
 
         if(tour.getUpdatedOn() != null)TourDb.setUpdatedOn(new Date());

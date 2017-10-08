@@ -13,18 +13,20 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vn.tourism.beta.entity.Tour;
-import vn.tourism.beta.entity.TourType;
 import vn.tourism.beta.entity.User;
 import vn.tourism.beta.repository.TourRepository;
 import vn.tourism.beta.repository.TourTypeRepository;
+import vn.tourism.beta.repository.TourRepository2;
 import vn.tourism.beta.repository.UserRepository;
 import vn.tourism.beta.security.JwtTokenUtil;
 import vn.tourism.beta.service.TourService;
+import vn.tourism.beta.specification.TourSpecification;
 import vn.tourism.beta.storage.StorageService;
 import vn.tourism.beta.utils.JSONUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Map;
 
 @RestController
 public class TourController {
@@ -43,6 +45,13 @@ public class TourController {
     private TourTypeRepository tourTypeRepository;
 
     @Autowired
+    private TourRepository2 tourRepository2;
+
+    @Autowired
+    private TourSpecification tourSpecification;
+
+
+    @Autowired
     private UserRepository userRepository;
 
     @Value("${jwt.header}")
@@ -56,31 +65,31 @@ public class TourController {
     private TourService tourService;
 
 
-    @Secured("ROLE_ADMIN")
-    @ResponseBody
-    @GetMapping(value = "custom-api/tours")
-    public ResponseEntity<?> getAllTour(
-            HttpServletRequest request,
-            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sort", defaultValue = "asc") String sort,
-            @RequestParam(name = "column", defaultValue = "id") String column,
-            @RequestParam(name = "paging", defaultValue = "5") int maxResult
-    ) {
-        HttpHeaders responseHeaders = new HttpHeaders();
-        Sort.Direction sortDirection = Sort.Direction.ASC;
-        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
-
-        try {
-            PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-            Iterable<Tour> tours = tourRepository.findAllByEnableEquals(pageRequest,true);
-            responseHeaders.set("Content-Type", "application/json");
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Secured("ROLE_ADMIN")
+//    @ResponseBody
+//    @GetMapping(value = "custom-api/tours")
+//    public ResponseEntity<?> getAllTour(
+//            HttpServletRequest request,
+//            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
+//            @RequestParam(name = "sort", defaultValue = "asc") String sort,
+//            @RequestParam(name = "column", defaultValue = "id") String column,
+//            @RequestParam(name = "paging", defaultValue = "5") int maxResult
+//    ) {
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        Sort.Direction sortDirection = Sort.Direction.ASC;
+//        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
+//
+//        try {
+//            PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
+//            Iterable<Tour> tours = tourRepository.findAllByEnableEquals(pageRequest,true);
+//            responseHeaders.set("Content-Type", "application/json");
+//            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
@@ -196,12 +205,10 @@ public class TourController {
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
-    @GetMapping(value = "custom-api/tours/findTour")
+    @GetMapping(value = "custom-api/tours")
     public ResponseEntity<?> findTour(
             HttpServletRequest request,
-            @RequestParam(name = "from", defaultValue = "") String from,
-            @RequestParam(name = "to", defaultValue = "") String to,
-            @RequestParam(name = "tourTypeId", defaultValue = "") Long tourTypeId,
+            @RequestParam Map<String, String> filter,
             @RequestParam(name = "page", defaultValue = "1") int pageNumber,
             @RequestParam(name = "sort", defaultValue = "asc") String sort,
             @RequestParam(name = "column", defaultValue = "id") String column,
@@ -211,12 +218,11 @@ public class TourController {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
 
-        PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-        Iterable<Tour> tours = tourRepository.findByTourType_IdAndDepartmentPointIgnoreCaseContainingAndDestinationIgnoreCaseContainingAndEnableEquals(pageRequest, tourTypeId, from, to, true);
-
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
         try {
+            PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
+            Iterable<Tour> tours = tourSpecification.findAllQuery(filter, pageRequest);
             return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
         }
         catch(Exception e){
@@ -225,62 +231,62 @@ public class TourController {
         }
     }
 
-    @Secured("ROLE_ADMIN")
-    @ResponseBody
-    @GetMapping(value = "custom-api/tours/findTourByDepPointAndDes")
-    public ResponseEntity<?> findTourByDepPointAndDes(
-            HttpServletRequest request,
-            @RequestParam(name = "from", defaultValue = "") String from,
-            @RequestParam(name = "to", defaultValue = "") String to,
-            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sort", defaultValue = "asc") String sort,
-            @RequestParam(name = "column", defaultValue = "id") String column,
-            @RequestParam(name = "paging", defaultValue = "5") int maxResult
-    ) {
-
-        Sort.Direction sortDirection = Sort.Direction.ASC;
-        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
-
-        PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-        Iterable<Tour> tours = tourRepository.findByDepartmentPointIgnoreCaseContainingAndDestinationIgnoreCaseContainingAndEnableEquals(pageRequest, from, to, true);
-
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
-        try {
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Secured("ROLE_ADMIN")
-    @ResponseBody
-    @GetMapping(value = "custom-api/tours/findTourByTourType")
-    public ResponseEntity<?> findTourByTourType(
-            HttpServletRequest request,
-            @RequestParam(name = "tourTypeId", defaultValue = "") Long tourTypeId,
-            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "sort", defaultValue = "asc") String sort,
-            @RequestParam(name = "column", defaultValue = "id") String column,
-            @RequestParam(name = "paging", defaultValue = "5") int maxResult
-    ) {
-
-        Sort.Direction sortDirection = Sort.Direction.ASC;
-        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
-
-        PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-        Iterable<Tour> tours = tourRepository.findByTourType_IdAndEnableEquals(pageRequest, tourTypeId, true);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.set("Content-Type", "application/json");
-        try {
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Secured("ROLE_ADMIN")
+//    @ResponseBody
+//    @GetMapping(value = "custom-api/tours/findTourByDepPointAndDes")
+//    public ResponseEntity<?> findTourByDepPointAndDes(
+//            HttpServletRequest request,
+//            @RequestParam(name = "from", defaultValue = "") String from,
+//            @RequestParam(name = "to", defaultValue = "") String to,
+//            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
+//            @RequestParam(name = "sort", defaultValue = "asc") String sort,
+//            @RequestParam(name = "column", defaultValue = "id") String column,
+//            @RequestParam(name = "paging", defaultValue = "5") int maxResult
+//    ) {
+//
+//        Sort.Direction sortDirection = Sort.Direction.ASC;
+//        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
+//
+//        PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
+//        Iterable<Tour> tours = tourRepository.findByDepartmentPointIgnoreCaseContainingAndDestinationIgnoreCaseContainingAndEnableEquals(pageRequest, from, to, true);
+//
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        responseHeaders.set("Content-Type", "application/json");
+//        try {
+//            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+//
+//    @Secured("ROLE_ADMIN")
+//    @ResponseBody
+//    @GetMapping(value = "custom-api/tours/findTourByTourType")
+//    public ResponseEntity<?> findTourByTourType(
+//            HttpServletRequest request,
+//            @RequestParam(name = "tourTypeId", defaultValue = "") Long tourTypeId,
+//            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
+//            @RequestParam(name = "sort", defaultValue = "asc") String sort,
+//            @RequestParam(name = "column", defaultValue = "id") String column,
+//            @RequestParam(name = "paging", defaultValue = "5") int maxResult
+//    ) {
+//
+//        Sort.Direction sortDirection = Sort.Direction.ASC;
+//        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
+//
+//        PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
+//        Iterable<Tour> tours = tourRepository.findByTourType_IdAndEnableEquals(pageRequest, tourTypeId, true);
+//        HttpHeaders responseHeaders = new HttpHeaders();
+//        responseHeaders.set("Content-Type", "application/json");
+//        try {
+//            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
+//        }
+//        catch(Exception e){
+//            e.printStackTrace();
+//            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 }

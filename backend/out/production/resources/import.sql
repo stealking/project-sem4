@@ -27,24 +27,39 @@ INSERT INTO user_authority (user_id, authority_id) VALUES (3, 1);
 INSERT INTO tour_type (name) VALUES ( 'Khách lẻ');
 INSERT INTO tour_type (name) VALUES ( 'Khách theo đoàn');
 
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Hà Nội', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 2, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'Nha Trang', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 2, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'Vũng Tàu', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 2, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Hà Nội', 'Cần Thơ', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM - Cần Thơ', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'Cần Thơ', 'Details', true, '', '12345', 'Hà Nội - Đà Nẵng - Nha Trang - Cần Thơ', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Đà Nẵng', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 2, null);
-INSERT INTO tour (department_point, destination, detail, enable, image, introduction, journey, total_time, transport, updated_on, tour_type_id, updated_by) VALUES ('Hà Nội', 'HCM', 'Details', true, '', '12345', 'Đà Nẵng - Nha Trang - HCM', '4 ngày 3 đêm', 'Xe ô tô', null, 1, null);
+INSERT INTO journey (name) VALUES ( 'Đà Nẵng - Huế');
+INSERT INTO journey (name) VALUES ( 'Cà Mau - Long An - Tiền Giang');
+INSERT INTO journey (name) VALUES ( 'Hồ Chí Minh - Cà Mau - Phú Quốc');
+INSERT INTO journey (name) VALUES ( 'Cà Mau - Phú Quốc');
+
+INSERT INTO departure (name) VALUES ( 'Đà Nẵng');
+INSERT INTO departure (name) VALUES ( 'Cà Mau');
+INSERT INTO departure (name) VALUES ( 'Hồ Chí Minh');
+INSERT INTO departure (name) VALUES ( 'Hà Nội');
+
+
+INSERT INTO transport (name) VALUES ( 'Máy bay');
+INSERT INTO transport (name) VALUES ( 'Xe ô tô');
+INSERT INTO transport (name) VALUES ( 'Tàu Hỏa');
+
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 3, 1, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 2, 2, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 1, 3, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 3, 4, 'Details', true, '', '12345', 4.5,  null, 2, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 2, 1, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 1, 2, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 3, 3, 'Details', true, '', '12345', 4.5,  null, 2, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 2, 4, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 1, 1, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 3, 2, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 2, 3, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 1, 4, 'Details', true, '', '12345', 4.5,  null, 2, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 3, 1, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 2, 2, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (1, 1, 3, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 3, 4, 'Details', true, '', '12345', 4.5,  null, 1, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 2, 1, 'Details', true, '', '12345', 4.5,  null, 2, null);
+INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 1, 2, 'Details', true, '', '12345', 4.5,  null, 1, null);
 
 INSERT INTO voucher(content, discount_percent, discount_money, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 10%', '10', null, true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
 INSERT INTO voucher(content, discount_percent, discount_money, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 20%', '20', null, true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);

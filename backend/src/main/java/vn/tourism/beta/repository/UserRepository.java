@@ -15,7 +15,7 @@ import java.util.List;
  */
 //@CrossOrigin(origins = {"http://localhost:8081", "http://localhost:8787"},
 //        maxAge = 4800, allowCredentials = "false")
-@RepositoryRestResource(excerptProjection = UserWithId.class)
+//@RepositoryRestResource(excerptProjection = UserWithId.class)
 public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     User findByUsername(String username);
     User findByEmail(String email);

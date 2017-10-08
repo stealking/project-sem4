@@ -1,11 +1,11 @@
 <template>
-  <el-row :gutter="20">
+  <el-row :gutter="20" class="login-main" style="margin-left: 0; margin-right: 0;">
     <el-col :span="12" :offset="6">
       <div class="right-side-content">
         <div class="panel" style="margin-top: 20px; background-color: white; padding: 10px">
           <h2 class="text-center">Register</h2>
           <el-row :gutter="20">
-            <el-col :span="18">
+            <el-col :span="22">
               <div class="detail-content">
                 <el-form :model="ruleForm" label-width="100px" :rules="rules" ref="ruleForm" class="demo-ruleForm">
                   <el-form-item label="Email" prop="email">
@@ -17,13 +17,8 @@
                   <el-form-item label="Password" prop="pass">
                     <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
                   </el-form-item>
-                  <el-form-item label="Confirm" prop="checkPass">
-                    <el-input type="password" v-model="ruleForm.checkPass" auto-complete="off"></el-input>
-                  </el-form-item>
-                  
-                  <el-form-item>
+                  <el-form-item class="text-center">
                     <el-button type="success" @click="submitForm('ruleForm')">Submit</el-button>
-                    <el-button type="default" @click="resetForm('ruleForm')">Reset</el-button>
                   </el-form-item>
                 </el-form>
               </div>
@@ -31,7 +26,6 @@
           </el-row>
         </div>
       </div>
-
     </el-col>
   </el-row>
 </template>
@@ -42,25 +36,6 @@ import router from '../../../router';
 
 export default {
   data() {
-    const validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password'));
-      } else {
-        if (this.ruleForm.checkPass !== '') {
-          this.$refs.ruleForm.validateField('checkPass');
-        }
-        callback();
-      }
-    };
-    const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('Please input the password again'));
-      } else if (value !== this.ruleForm.pass) {
-        callback(new Error('Two inputs don\'t match!'));
-      } else {
-        callback();
-      }
-    };
     return {
       pathImage: 'http://localhost:8080/upload/',
       fileImage: File,
@@ -69,13 +44,6 @@ export default {
         email: '',
         username: '',
         pass: '',
-        checkPass: '',
-        firstName: '',
-        lastName: '',
-        address: '',
-        phone: '',
-        dob: '',
-        imageUrl: '',
       },
       rules: {
         email: [
@@ -87,21 +55,8 @@ export default {
           { min: 3, message: 'Length should be min 3', trigger: 'blur' },
         ],
         pass: [
-          { required: true, validator: validatePass, trigger: 'blur' },
+          { required: true, message: 'Please input password', trigger: 'blur' },
           { min: 6, message: 'Length should be min 6', trigger: 'blur' },
-        ],
-        checkPass: [
-          { required: true, validator: validatePass2, trigger: 'blur' },
-          { min: 6, message: 'Length should be min 6', trigger: 'blur' },
-        ],
-        firstName: [
-          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
-        ],
-        lastName: [
-          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
-        ],
-        address: [
-          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
         ],
         // phone: [
         //   { validator: checkPhone, trigger: 'blur' },
@@ -110,22 +65,6 @@ export default {
     };
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
-      this.fileImage = file.raw;
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('Avatar picture must be JPG format!');
-      }
-      if (!isLt2M) {
-        this.$message.error('Avatar picture size can not exceed 2MB!');
-      }
-      return isJPG && isLt2M;
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -142,11 +81,12 @@ export default {
                 address: this.ruleForm.address,
                 phone: this.ruleForm.phone,
                 dob: this.ruleForm.dob,
+                authorities: [{id: 3}],
               };
               service.createUser(user).then((response) => {
                 if (response.status === 200) {
                   this.$message.success('Create successed!');
-                  router.push({ name: 'User' });
+                  router.push({ path: '/' });
                 } else {
                   this.$message.error('Create failed!');
                 }
@@ -158,12 +98,6 @@ export default {
         }
         return true;
       });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
-    back() {
-      router.push({ name: 'User' });
     },
   },
 };
@@ -187,57 +121,29 @@ export default {
   border-radius: 4px;
 }
 
-.sc-table .action-list .el-button {
-  display: inline-block;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  background: #fff;
-  border: 1px solid #c4c4c4;
-  color: #1f2d3d;
-  margin: 0;
-  padding: 5px 10px;
-  border-radius: 4px;
-}
+.login-main {
 
-.avatar-content {
-  padding: 0 10px 10px 10px;
-  margin-top: 10px;
-  text-align: center;
-  /* box-shadow: 0 2px 18px #E5E5E5; */
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
-}
-
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 178px;
-  height: 178px;
-  line-height: 178px;
-  text-align: center;
-}
-
-.avatar {
-  width: 178px;
-  height: 178px;
-  display: block;
+  height: 100vh;
+  top: 0px;
+  right: 0px;
+  margin-top: 0px;
+  position: absolute;
+  width: 100%;
+  margin-left: 0px;
+  background: url(../../../../static/1.jpg)no-repeat center top;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -ms-background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .text-center {
   text-align: center;
 }
-
 </style>
 
 

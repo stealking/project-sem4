@@ -63,7 +63,7 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @RequestMapping(value = "api/user", method = RequestMethod.GET)
+    @RequestMapping(value = "custom-api/user", method = RequestMethod.GET)
     public User getAuthenticatedUser(HttpServletRequest request) {
         String header = request.getHeader("Authorization");
         String authToken = header.substring(7);

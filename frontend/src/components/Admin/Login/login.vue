@@ -1,5 +1,5 @@
 <template>
-  <div class="center-container">
+  <div class="center-container login-main">
     <div class="main-content-agile">
       <div class="sub-main-w3">
         <div class="wthree-pro">
@@ -80,7 +80,7 @@ export default {
             username: this.ruleForm.username,
             password: this.ruleForm.pass,
           };
-          auth.login(credentials, 'Admin', '').then(() => {
+          auth.login(credentials, 'Home', '').then(() => {
             this.error = 'Wrong username or password!';
           });
         }
@@ -135,5 +135,28 @@ export default {
 
 .bg-info {
   background-color: transparent !important;
+}
+
+.sub-w3l h6 a {
+  font-size: 1em;
+}
+
+.login-main {
+  height: 100vh;
+  top: 0px;
+  right: 0px;
+  margin-top: 0px;
+  position: absolute;
+  width: 100%;
+  margin-left: 0px;
+  background: url(../../../../static/1.jpg)no-repeat center top;
+  background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  -ms-background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  font-family: 'Open Sans', sans-serif;
 }
 </style>

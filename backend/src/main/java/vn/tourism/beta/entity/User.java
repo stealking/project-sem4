@@ -29,7 +29,6 @@ public class User {
     private String password;
 
     @Column(name = "avatar", length = 300)
-    @Size(min = 4, max = 300)
     private String avatar;
 
 

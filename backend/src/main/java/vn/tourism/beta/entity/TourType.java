@@ -3,6 +3,7 @@ package vn.tourism.beta.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.List;
@@ -29,8 +30,9 @@ public class TourType {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedOn;
 
-    @Column(name = "enable")
-    private Boolean enable = true;
+    @Column(name = "enable",columnDefinition = "boolean default true",nullable = false)
+    @NotNull
+    private boolean enable = true;
 
 //    @OneToMany(mappedBy="tourType")
 //    private List<Tour> tours;

@@ -24,7 +24,7 @@ public class TourSpecification {
             return null;
         } else {
             // Specification using Java 8 lambdas
-            return (root, query, cb) -> cb.like(root.join("departure").get("name"), "%"+name+"%");
+            return (root, query, cb) -> cb.like(cb.lower(root.join("departure").get("name")), "%"+name.toLowerCase()+"%");
         }
     }
     public static Specification<Tour> routeNameContains(String name) {
@@ -32,7 +32,7 @@ public class TourSpecification {
             return null;
         } else {
             // Specification using Java 8 lambdas
-            return (root, query, cb) -> cb.like(root.join("route").get("name"), "%"+name+"%");
+            return (root, query, cb) -> cb.like(cb.lower(root.join("route").get("name")), "%"+name.toLowerCase()+"%");
         }
     }
     public static Specification<Tour> journeyNameContains(String name) {
@@ -40,7 +40,7 @@ public class TourSpecification {
             return null;
         } else {
             // Specification using Java 8 lambdas
-            return (root, query, cb) -> cb.like(root.join("journey").get("name"), "%"+name+"%");
+            return (root, query, cb) -> cb.like(cb.lower(root.join("journey").get("name")), "%"+name.toLowerCase()+"%");
         }
     }
     public static Specification<Tour> tourTypeIdEquals(String id) {

@@ -24,8 +24,8 @@ INSERT INTO user_authority (user_id, authority_id) VALUES (2, 1);
 INSERT INTO user_authority (user_id, authority_id) VALUES (3, 1);
 
 
-INSERT INTO tour_type (name) VALUES ( 'Khách lẻ');
-INSERT INTO tour_type (name) VALUES ( 'Khách theo đoàn');
+INSERT INTO tour_type (name, enable) VALUES ( 'Khách lẻ', true);
+INSERT INTO tour_type (name, enable) VALUES ( 'Khách theo đoàn', true);
 
 INSERT INTO journey (name) VALUES ( 'Đà Nẵng - Huế');
 INSERT INTO journey (name) VALUES ( 'Cà Mau - Long An - Tiền Giang');

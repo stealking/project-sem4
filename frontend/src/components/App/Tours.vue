@@ -8,17 +8,21 @@ doctype html
     .design
       el-form(ref='form', :model='form')
         el-form-item(label='Loại hình du lịch')
-          el-checkbox-group(v-model='form.type')
-            el-checkbox(label='Online activities', name='type')
+          el-select(v-model='form.type', filterable='', placeholder='Select')
+            el-option(v-for='item in options', :key='item.value', :label='item.label', :value='item.value')
+
         el-form-item(label='Phương tiện')
-          el-checkbox-group(v-model='form.type')
-            el-checkbox(label='Online activities', name='type')
+          el-select(v-model='form.type', filterable='', placeholder='Select')
+            el-option(v-for='item in options', :key='item.value', :label='item.label', :value='item.value')
+
         el-form-item(label='Thời gian')
-          el-checkbox-group(v-model='form.type')
-            el-checkbox(label='Online activities', name='type')
+          el-select(v-model='form.type', filterable='', placeholder='Select')
+            el-option(v-for='item in options', :key='item.value', :label='item.label', :value='item.value')
+
         el-form-item(label='Khách sạn')
-          el-checkbox-group(v-model='form.type')
-            el-checkbox(label='Online activities', name='type')
+         el-select(v-model='form.type', filterable='', placeholder='Select')
+            el-option(v-for='item in options', :key='item.value', :label='item.label', :value='item.value')
+
 
   .design.row.columnOnNarrow.center.fw
     Info
@@ -44,6 +48,22 @@ export default {
   },
   data() {
     return{
+      options: [{
+        value: 'a',
+        label: 'a'
+      }, {
+        value: 'a',
+        label: 'b'
+      }, {
+        value: 'Option3',
+        label: 'c'
+      }, {
+        value: 'Option4',
+        label: 'sa'
+      }, {
+        value: 'Option5',
+        label: 'Option5'
+      }],
       form: {
         type: [],
       }

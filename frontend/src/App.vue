@@ -37,8 +37,6 @@ a:hover
   text-decoration none!important
 p
   margin-bottom 0px!important
-.el-form-item
-  margin-bottom 0px
 
 .contain
   flex 1

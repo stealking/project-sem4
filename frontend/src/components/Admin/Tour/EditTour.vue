@@ -16,19 +16,28 @@
             <el-col :span="24">
               <div class="detail-content">
                 <el-form :model="tourDetailsForm" :rules="rules" ref="tourDetailsForm" class="demo-tourDetailsForm" label-width="180px">
-                  <el-form-item label="Department Point" prop="departmentPoint">
-                    <el-input v-model="tourDetailsForm.departmentPoint"></el-input>
+                  <el-form-item label="Departure" prop="departureId">
+                    <el-select v-model="tourDetailsForm.departureId" placeholder="Select" style="width: 100%">
+                      <el-option v-for="item in optionsDeparture" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                   </el-form-item>
-                  <el-form-item label="Destination" prop="destination">
-                    <el-input v-model="tourDetailsForm.destination"></el-input>
-                  </el-form-item>
-                  <el-form-item label="Journey" prop="journey">
-                    <el-input v-model="tourDetailsForm.journey"></el-input>
+                  <el-form-item label="Journey" prop="journeyId">
+                    <el-select v-model="tourDetailsForm.journeyId" placeholder="Select" style="width: 100%">
+                      <el-option v-for="item in optionsJourney" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
                   </el-form-item>
                   <el-form-item label="Tour Type" prop="tourTypeId">
                     <el-select v-model="tourDetailsForm.tourTypeId" placeholder="Select" style="width: 100%">
-                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"  ></el-option>
+                      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
+                  </el-form-item>
+                  <el-form-item label="Transport" prop="transportId">
+                    <el-select v-model="tourDetailsForm.transportId" placeholder="Select" style="width: 100%">
+                      <el-option v-for="item in optionsTransport" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="Total Time" prop="totalTime">
+                    <el-input v-model="tourDetailsForm.totalTime"></el-input>
                   </el-form-item>
                   <el-form-item label="Introduction" prop="introduction">
                     <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 10}" v-model="tourDetailsForm.introduction"></el-input>
@@ -36,11 +45,8 @@
                   <el-form-item label="Detail" prop="detail">
                     <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 10}" v-model="tourDetailsForm.detail"></el-input>
                   </el-form-item>
-                  <el-form-item label="Total Time" prop="totalTime">
-                    <el-input v-model="tourDetailsForm.totalTime"></el-input>
-                  </el-form-item>
-                  <el-form-item label="Transport" prop="transport">
-                    <el-input v-model="tourDetailsForm.transport"></el-input>
+                  <el-form-item label="Summary" prop="summary">
+                    <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 10}" v-model="tourDetailsForm.summary"></el-input>
                   </el-form-item>
                   <el-form-item label="Image" prop="image">
                     <el-col>
@@ -110,6 +116,9 @@ export default {
   data() {
     return {
       pathImage: 'http://localhost:8080/upload/',
+      optionsTransport: [],
+      optionsJourney: [],
+      optionsDeparture: [],
       fileImage: File,
       activeName: 'first',
       moreDetails: [],
@@ -121,13 +130,15 @@ export default {
       tourDetailsForm: {
         id: '',
         tourTypeId: '',
-        departmentPoint: '',
-        destination: '',
+        transport: '',
+        transportId: '',
+        departure: '',
+        departureId: '',
         journey: '',
+        journeyId: '',
         introduction: '',
         detail: '',
         totalTime: '',
-        transport: '',
         image: '',
       },
       options: [{
@@ -138,15 +149,6 @@ export default {
         label: 'Khách theo đoàn'
       }],
       rules: {
-        departmentPoint: [
-          { required: true, message: 'Please input department point', trigger: 'blur' },
-        ],
-        destination: [
-          { required: true, message: 'Please input destination', trigger: 'blur' },
-        ],
-        journey: [
-          { required: true, message: 'Please input journey', trigger: 'blur' },
-        ],
         introduction: [
           { required: true, message: 'Please input introduction', trigger: 'blur' },
         ],
@@ -156,18 +158,18 @@ export default {
         totalTime: [
           { required: true, message: 'Please input total time', trigger: 'blur' },
         ],
-        transport: [
-          { required: true, message: 'Please input transport', trigger: 'blur' },
-        ],
       },
     };
   },
   mounted() {
-    moment.locale('vi');  
+    moment.locale('vi');
     this.tourDetailsForm.id = this.$route.params.id;
     service.getTourById(this.tourDetailsForm.id).then((response) => {
       this.tourDetailsForm = { ...this.tourDetailsForm, ...response }
       this.tourDetailsForm.tourTypeId = response.tourType.id;
+      this.tourDetailsForm.transportId = response.transport.id;
+      this.tourDetailsForm.journeyId = response.journey.id;
+      this.tourDetailsForm.departureId = response.departure.id;
       if (response.image !== '' && response.image !== null && response.image !== undefined) {
         this.tourDetailsForm.image = `${this.pathImage}${response.image}`;
       } else {
@@ -185,7 +187,27 @@ export default {
         element.departmentDate = dateString;
         this.moreDetails.push(element);
       }, this);
+    });
 
+    service.findAllTransport().then((response) => {
+      let list = response;
+      list.forEach((element) => {
+        this.optionsTransport.push({ value: element.id, label: element.name });
+      }, this);
+    });
+
+    service.findAllJourney().then((response) => {
+      let list = response;
+      list.forEach((element) => {
+        this.optionsJourney.push({ value: element.id, label: element.name });
+      }, this);
+    });
+
+    service.findAllDeparture().then((response) => {
+      let list = response;
+      list.forEach((element) => {
+        this.optionsDeparture.push({ value: element.id, label: element.name });
+      }, this);
     });
   },
   methods: {
@@ -211,9 +233,15 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const id = this.tourDetailsForm.id;
-          delete this.tourDetailsForm.tourTypeId;
-          const tour = this.tourDetailsForm;
+          let tour = { ...this.tourDetailsForm};
+          tour.tourType = { id: this.tourDetailsForm.tourTypeId };
+          tour.journey = {id : this.tourDetailsForm.journeyId};
+          tour.departure = { id: this.tourDetailsForm.departureId};
+          tour.transport = { id: this.tourDetailsForm.transportId};
+          delete tour.tourTypeId;
+          delete tour.departureId;
+          delete tour.transportId;
+          delete tour.journeyId;
           service.updateTour(tour, this.fileImage).then((response) => {
             if (response.status === 200) {
               this.$message.success('Update successed!');
@@ -230,7 +258,7 @@ export default {
     handleEdit(index, row) {
       const id = row.id;
       const tourId = this.tourDetailsForm.id
-      router.push({ name: 'EditTourDetail', params: { id , tourId} });
+      router.push({ name: 'EditTourDetail', params: { id, tourId } });
     },
     handleDelete(index, row) {
       this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
@@ -262,7 +290,7 @@ export default {
         this.total = response.totalElements;;
         const listUser = response.content;
         listUser.forEach((element) => {
-          let dateString = moment(element.dob).format('L'); 
+          let dateString = moment(element.dob).format('L');
           if (dateString === 'Invalid date') {
             dateString = ''
           }
@@ -278,7 +306,7 @@ export default {
         this.total = response.totalElements;;
         const listUser = response.content;
         listUser.forEach((element) => {
-          let dateString = moment(element.dob).format('L'); 
+          let dateString = moment(element.dob).format('L');
           if (dateString === 'Invalid date') {
             dateString = ''
           }
@@ -299,7 +327,7 @@ export default {
         this.total = response.totalElements;;
         const listUser = response.content;
         listUser.forEach((element) => {
-          let dateString = moment(element.dob).format('L'); 
+          let dateString = moment(element.dob).format('L');
           if (dateString === 'Invalid date') {
             dateString = ''
           }
@@ -394,7 +422,6 @@ export default {
   height: 150px;
   display: block;
 }
-
 </style>
 
 

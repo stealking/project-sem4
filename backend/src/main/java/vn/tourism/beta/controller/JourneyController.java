@@ -21,6 +21,7 @@ import vn.tourism.beta.utils.JSONUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 public class JourneyController {
@@ -76,13 +77,13 @@ public class JourneyController {
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
-    @GetMapping(value = "custom-api/journeys-count")
+    @GetMapping(value = "custom-api/get-all-journeys")
     public ResponseEntity<?> getAllJourney() {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");
-        Long amount = journeyRepository.countAllByEnableEquals(true);
+        List<Journey> journeys = journeyRepository.findAllByEnableTrue();
         try {
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(amount), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(journeys), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -16,15 +16,16 @@
             <el-row :gutter="20">
               <el-col :span="6">
                 <el-select v-model="select" placeholder="Tour type" @change="searchTourType()">
+                  <el-option label="All tour type" value="0"></el-option>
                   <el-option label="Tour khách lẻ" value="1"></el-option>
                   <el-option label="Tour theo đoàn" value="2"></el-option>
                 </el-select>
               </el-col>
               <el-col :span="9" style="padding-right: 0">
-                <el-input placeholder="Department Point" v-model="depPointSearch" @keyup.enter.native="search()"/>
+                <el-input placeholder="Departure" v-model="depPointSearch" @keyup.enter.native="search()" />
               </el-col>
               <el-col :span="9" style="padding-right: 0">
-                <el-input placeholder="Destination" v-model="destinationSearch" @keyup.enter.native="search()">
+                <el-input placeholder="Journey" v-model="journeySearch" @keyup.enter.native="search()">
                   <el-button slot="append" icon="search" @click="search()"></el-button>
                 </el-input>
               </el-col>
@@ -39,16 +40,15 @@
         </el-row>
       </div>
 
-      <el-table :data="datas" border style="width: 100%">
-        <el-table-column prop="departmentPoint" label="Department Point" />
-        <el-table-column prop="destination" label="Destination" />
-        <el-table-column prop="journey" label="Journey" />
-        <el-table-column prop="totalTime" label="Total time" />
-        <el-table-column prop="tourType.name" label="Tour type" />
+      <el-table :data="datas" border style="width: 100%" @sort-change="handleSort">
+        <el-table-column prop="departure.name" label="Departure" sortable="custom"/>
+        <el-table-column prop="journey.name" label="Journey" sortable="custom"/>
+        <el-table-column prop="totalTime" label="Total time" sortable="custom"/>
+        <el-table-column prop="tourType.name" label="Tour type" sortable="custom"/>
+        <el-table-column prop="transport.name" label="Transport" sortable="custom"/>
         <el-table-column label="Action">
           <template scope="scope">
             <el-row :gutter="10">
-
               <el-col :xs="24" :sm="24" :md="24" :lg="12">
                 <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
                   <i class="el-icon-edit"></i> Edit</el-button>
@@ -86,12 +86,12 @@ export default {
       column: 'id',
       field: '',
       depPointSearch: '',
-      destinationSearch: '',
-      select: '',
+      journeySearch: '',
+      select: '0',
     };
   },
   mounted() {
-    moment.locale('vi'); 
+    moment.locale('vi');
     service.getAllTour().then((response) => {
       this.refresh(response);
     });
@@ -99,13 +99,13 @@ export default {
   methods: {
     handleSizeChange(val) {
       this.pageSize = val;
-      service.changePage(this.currentPage, this.type, this.pageSize, this.sort, this.column, this.field, this.value).then((response) => {
+      service.findTour(this.depPointSearch, this.journeySearch, this.select, this.currentPage, this.pageSize, this.sort, this.column).then((response) => {
         this.refresh(response);
       });
     },
     handleCurrentChange(val) {
       this.currentPage = val;
-      service.changePage(this.currentPage, this.type, this.pageSize, this.sort, this.column, this.field, this.value).then((response) => {
+      service.findTour(this.depPointSearch, this.journeySearch, this.select, this.currentPage, this.pageSize, this.sort, this.column).then((response) => {
         this.refresh(response);
       });
     },
@@ -115,7 +115,7 @@ export default {
         this.total = response.totalElements;;
         const listUser = response.content;
         listUser.forEach((element) => {
-          let dateString = moment(element.dob).format('L'); 
+          let dateString = moment(element.dob).format('L');
           if (dateString === 'Invalid date') {
             dateString = ''
           }
@@ -130,7 +130,7 @@ export default {
         this.total = response.totalElements;;
         const list = response.content;
         list.forEach((element) => {
-          let dateString = moment(element.dob).format('L'); 
+          let dateString = moment(element.dob).format('L');
           if (dateString === 'Invalid date') {
             dateString = ''
           }
@@ -140,13 +140,14 @@ export default {
       }
     },
     handleSort(val) {
+      console.log(val);
       if (val.order === 'ascending') {
         this.sort = 'asc';
       } else {
         this.sort = 'desc';
       }
       this.column = val.prop;
-      service.changePage(this.currentPage, this.type, this.pageSize, this.sort, this.column, this.field, this.value).then((response) => {
+      service.findTour(this.depPointSearch, this.journeySearch, this.select, this.currentPage, this.pageSize, this.sort, this.column).then((response) => {
         this.refresh(response);
       });
     },
@@ -180,35 +181,19 @@ export default {
       });
     },
     search() {
-      if(this.select === '' || this.select === null) {
-        service.findTourByDepPointAndDes(this.depPointSearch, this.destinationSearch, this.currentPage, this.pageSize, this.sort, this.column).then((response) => {
-          if (response === false) {
-            this.$message({
-              type: 'error',
-              message: 'Search failed!',
-            });
-          } else {
-            this.refresh(response)
-          }
-        });
-      } else {
-        service.findTour(this.depPointSearch, this.destinationSearch, this.select, this.currentPage, this.pageSize, this.sort, this.column).then((response) => { 
-          if (response === false) {
-            this.$message({
-              type: 'error',
-              message: 'Search failed!',
-            });
-          } else {
-            this.refresh(response)
-          }    
-        });
-      } 
+      service.findTour(this.depPointSearch, this.journeySearch, this.select, this.currentPage, this.pageSize, this.sort, this.column).then((response) => {
+        if (response === false) {
+          this.$message({
+            type: 'error',
+            message: 'Search failed!',
+          });
+        } else {
+          this.refresh(response)
+        }
+      });
     },
     searchTourType() {
-      this.type = 'tours/findTourByTourType';
-      this.field = 'tourTypeId';
-      this.value = this.select;
-      service.changePage(this.currentPage, this.type, this.pageSize, this.sort, this.column, this.field, this.value).then((response) => {
+      service.findTour(this.depPointSearch, this.journeySearch, this.select, this.currentPage, this.pageSize, this.sort, this.column).then((response) => {
         if (response === false) {
           this.$message({
             type: 'error',

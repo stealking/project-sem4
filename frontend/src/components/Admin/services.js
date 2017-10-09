@@ -289,6 +289,7 @@ export default {
   createTour(tour, image) {
     const newTour = JSON.stringify(tour);
     const formData = new FormData();
+    console.log(newTour);
     formData.append('content', newTour);
     formData.append('file', image);
     return axios({
@@ -326,10 +327,16 @@ export default {
       return response.data;
     });
   },
-  findTour(depPoint, des, tourTypeId, page, paging, sort, column) {
+  findTour(dep, journey, tourTypeId, page, paging, sort, column) {
+    column = column == null ? 'id' : column;
+    let link = `${url}/custom-api/tours?page=${page}&paging=${paging}&sort=${sort}&column=${column}&departureName=${dep}&journeyName=${journey}`;
+    if(tourTypeId !== '0') {
+      link += `&tourTypeId=${tourTypeId}`;
+    }
+    console.log(link);
     return axios({
       method: 'get',
-      url: `${url}/custom-api/tours/findTour?from=${depPoint}&to=${des}&tourTypeId=${tourTypeId}&page=${page}&paging=${paging}&sort=${sort}&column=${column}`,
+      url: `${link}`,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
@@ -550,5 +557,71 @@ export default {
     });
   },
   //End voucher services
+
+  //transport serivces
+  findAllTransport() {
+    return fetch(`${url}/custom-api/get-all-transports`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  //End transport services
+
+  //Journey serivces
+  findAllJourney() {
+    return fetch(`${url}/custom-api/get-all-journeys`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  //End Journey services
+
+  //departures serivces
+  findAllDeparture() {
+    return fetch(`${url}/custom-api/get-all-departures`, {
+      method: 'get',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      if (response.status !== 200) {
+        console.log(`Looks like there was a problem. Status Code: ${response.status}`);
+        throw response.status;
+      }
+      // Examine the text in the response
+      return response.json();
+    },
+    ).catch((err) => {
+      console.log('Fetch Error :-S', err);
+    });
+  },
+  //End departures services
 
 };

@@ -1,4 +1,5 @@
 import Home from '@/components/App/Home';
+import Account from '@/components/App/Account';
 import Tour from '@/components/App/Tour';
 import Tours from '@/components/App/Tours';
 import TourDetail from '@/components/App/TourDetail';
@@ -6,9 +7,13 @@ import TourDetail from '@/components/App/TourDetail';
 export default [
   {
     path: '/',
-    name: Home,
+    name: 'Home',
     component: Home,
-    // redirect: 'tour'
+  },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Account,
   }, {
     path: '/tours',
     component: Tours,

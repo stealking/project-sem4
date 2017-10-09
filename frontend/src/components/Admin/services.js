@@ -112,7 +112,6 @@ export default {
 
   createUser(user) {
     const newUser = JSON.stringify(user);
-    console.log(newUser);
     const formData = new FormData();
     formData.append('content', newUser);
     return axios({
@@ -123,7 +122,9 @@ export default {
         'content-type': 'multipart/form-data',
         Authorization: `Bearer ${localStorage.getItem('access_token')}`,
       },
-    }).then(response => response);
+    }).then(response => response).catch((err) => {
+      console.log(err.response);
+    });;
   },
 
   changePassword(passwordConfirm) {
@@ -138,7 +139,7 @@ export default {
       },
     }).then((response) => {
       return response;
-    }).catch(err => {
+    }).catch((err) => {
       return err.response;
     });
   },
@@ -148,14 +149,27 @@ export default {
       method: 'post',
       url: `${url}/check-email`,
       data: { email },
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-      },
     }).then((response) => {
-      if (response === null || response === undefined) {
+      if (response.data === null || response.data === undefined) {
         return false;
       }
       return true;
+    }).catch((err) => {
+      console.log(err.response);
+    });
+  },
+  checkUsername(username) {
+    return axios({
+      method: 'post',
+      url: `${url}/check-username`,
+      data: { username },
+    }).then((response) => {
+      if (response.data === null || response.data === undefined) {
+        return false;
+      }
+      return true;
+    }).catch((err) => {
+      console.log(err.response);
     });
   },
 

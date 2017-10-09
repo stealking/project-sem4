@@ -32,7 +32,6 @@
       <el-table :data="datas" border style="width: 100%" @sort-change="handleSort">
         <el-table-column prop="content" label="Content" sortable="custom" />
         <el-table-column prop="discountPercent" label="Discount (%)" sortable="custom" />
-        <el-table-column prop="discountMoney" label="Discount ($)" sortable="custom" />
         <el-table-column prop="introduction" label="Introduction" sortable="custom" />
         <el-table-column prop="expiredOn" label="Expired On" />
         <el-table-column prop="image" label="Image" />
@@ -70,7 +69,6 @@ export default {
       datas: [{
         id: '',
         image: '',
-        discountMoney: '',
         discountPercent: '',
         introduction: '',
         content: '',

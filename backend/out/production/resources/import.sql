@@ -61,9 +61,9 @@ INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image
 INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 2, 1, 'Details', true, '', '12345', 4.5,  null, 2, null);
 INSERT INTO tour ( journey_id, departure_id, transport_id, detail, enable, image, introduction,  total_time, updated_on, tour_type_id, updated_by) VALUES (2, 1, 2, 'Details', true, '', '12345', 4.5,  null, 1, null);
 
-INSERT INTO voucher(content, discount_percent, discount_money, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 10%', '10', null, true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
-INSERT INTO voucher(content, discount_percent, discount_money, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 20%', '20', null, true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
-INSERT INTO voucher(content, discount_percent, discount_money, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 20%', null, '200000', true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
+INSERT INTO voucher(content, discount_percent, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 10%', '10', true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
+INSERT INTO voucher(content, discount_percent, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 20%', '20', true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
+INSERT INTO voucher(content, discount_percent, enable, expired_on, image, introduction, updated_on, updated_by) VALUES ('GIảm Giá 30%', '30', true, '2017-09-04 00:00:00', null, null, '2017-09-04 00:00:00', 1);
 
 INSERT INTO tour_detail(department_date, details, enable, ex_cost, price_adult, price_baby, price_children, updated_on, tour_id, updated_by, voucher_id) VALUES ('2017-09-04 00:00:00','Tour thang 7',true,'55555555','666666666666','7777777','88888888888','2017-09-04 00:00:00','1','1', 1);
 INSERT INTO tour_detail(department_date, details, enable, ex_cost, price_adult, price_baby, price_children, updated_on, tour_id, updated_by, voucher_id) VALUES ('2017-09-04 00:00:00','Tour thang 8',true,'55555555','666666666666','7777777','88888888888','2017-09-04 00:00:00','1','1', null);

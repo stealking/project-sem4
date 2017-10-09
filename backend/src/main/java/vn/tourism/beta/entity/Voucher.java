@@ -24,16 +24,13 @@ public class Voucher {
     private Long id;
 
     @Column(name = "discountPercent")
-    private Long discountPercent;
-
-    @Column(name = "discountMoney")
-    private Long discountMoney;
+    private String discountPercent;
 
     @Column(name = "image")
     private String image;
 
-    @Column(name = "introduction", length = 300)
-    @Size(min = 4, max = 300)
+    @Column(name = "introduction", length = 500)
+    @Size(min = 4, max = 500)
     private String introduction;
 
     @Column(name = "content", length = 500)

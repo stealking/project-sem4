@@ -75,6 +75,7 @@ export default {
     handleCommand(command) {
       if (command === 'Log out') {
         auth.logout();
+        router.push({path: '/'});
       } else if (command === 'My profile') {
         router.push({ name: 'Profile' });
       } else if (command === 'Change password') {

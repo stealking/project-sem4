@@ -34,13 +34,19 @@ div
       v-menu(transition='scale-transition' offset-y)
         v-btn(flat slot='activator')
           v-icon people
-        v-list(v-if="authenticated === true")
+        v-list(v-if="isAdmin === true")
+          v-list-tile(v-for='item in adminMenu.items', :key='item.title', @click='navigate(item.click)')
+            v-list-tile-action
+              v-icon {{ item.icon }}
+            v-list-tile-content
+              v-list-tile-title {{ item.title }}  
+        v-list(v-else-if="authenticated === true")
           v-list-tile(v-for='item in userMenu.items', :key='item.title', @click='navigate(item.click)')
             v-list-tile-action
               v-icon {{ item.icon }}
             v-list-tile-content
               v-list-tile-title {{ item.title }}
-        v-list(v-if="authenticated === false")
+        v-list(v-else)
           v-list-tile(v-for='item in userMenu2.items', :key='item.title', @click='navigate(item.click)')
             v-list-tile-action
               v-icon {{ item.icon }}
@@ -58,9 +64,14 @@ export default {
   mounted() {
     auth.checkAuth();
     this.authenticated = auth.user.authenticated;
-    services.getUserInfo().then((response) => {
-      console.log(response);
-    })
+    if(this.authenticated) {
+      services.getUserInfo().then((response) => {
+        let authen = response.authorities;
+        authen.forEach(function(element) {
+          this.isAdmin = (element.id === 1 || element.id === 2) ? true : false;
+        }, this);
+      })
+    }
   },
   methods: {
     shouldAbsolute(){
@@ -82,7 +93,7 @@ export default {
           router.push({ name: 'Register'})
           break;
         case 2:
-          router.push({ name: 'UserInfo' })
+          router.push({ name: 'Account' })
           break;
         case 3:
           auth.logout();
@@ -90,6 +101,9 @@ export default {
           break;
         case 4:
           router.push({ name: 'Login' })
+          break;
+        case 5:
+          router.push({ name: 'Admin' })
           break;
         default:
           break;
@@ -102,6 +116,15 @@ export default {
       header: 'Header',
       authenticated: false,
       isAdmin: false,
+      adminMenu : {
+        header: { title: 'User', icon: 'fa-user' },
+        items: [
+          { title: 'Admin', icon: 'fa-users', click: 5 },
+          { title: 'Register', icon: 'fa-registered', click: 1 },
+          { title: 'Account info', icon: 'fa-address-card', click: 2 },
+          { title: 'Log out', icon: 'fa-sign-out', click: 3 },
+        ],    
+      },
       userMenu: {
         header: { title: 'User', icon: 'fa-user' },
         items: [
@@ -146,9 +169,6 @@ export default {
             { title: 'Liên hệ', icon: 'fa-question-circle-o', click: 3.0 },
             { title: 'Góp ý', icon: 'question_answer', click: 3.1 },
           ],
-        },
-        admin: {
-          header: {title: 'Admin', icon: 'fa-users', click: 4.0},   
         },
       },
       right: null,

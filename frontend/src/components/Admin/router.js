@@ -11,13 +11,12 @@ import NewTourDetail from '@/components/Admin/Tour-Details/NewTourDetail';
 import Voucher from '@/components/Admin/Voucher/Voucher';
 import EditVoucher from '@/components/Admin/Voucher/EditVoucher';
 import NewVoucher from '@/components/Admin/Voucher/NewVoucher';
-import Pages from '@/components/Admin/Login/index';
+import Pages from '@/components/Admin/Pages';
 import Register from '@/components/Admin/Login/register';
 import Login from '@/components/Admin/Login/login';
 import Profile from '@/components/Admin/User/Profile';
 import ChangePassword from '@/components/Admin/User/ChangePassword';
 import auth from '../../auth';
-// import router from '../../router';
 
 function guardRoute(to, from, next) {
   auth.checkAuth();

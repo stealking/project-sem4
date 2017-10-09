@@ -16,9 +16,6 @@
               <el-form-item label="Content" prop="content">
                 <el-input v-model="voucherDetailsForm.content"></el-input>
               </el-form-item>
-              <el-form-item label="Discount($)" prop="discountMoney">
-                <el-input v-model.number="voucherDetailsForm.discountMoney"></el-input>
-              </el-form-item>
               <el-form-item label="Discount(%)" prop="discountPercent">
                 <el-input v-model.number="voucherDetailsForm.discountPercent"></el-input>
               </el-form-item>
@@ -63,7 +60,6 @@ export default {
       voucherDetailsForm: {
         id: '',
         image: '',
-        discountMoney: '',
         discountPercent: '',
         introduction: '',
         content: '',
@@ -80,9 +76,6 @@ export default {
           { required: true, message: 'Please input introduction', trigger: 'blur' },
           { min: 4, message: 'Length should be min 4', trigger: 'blur' },
         ],
-        discountMoney: [
-          { type: 'number', message: 'age must be a number' }
-        ],
         discountPercent: [
           { type: 'number', message: 'age must be a number' }
         ],
@@ -94,7 +87,6 @@ export default {
     this.voucherDetailsForm.id = this.$route.params.id;
     service.getVoucherById(this.voucherDetailsForm.id).then((response) => {
       this.voucherDetailsForm = { ...this.voucherDetailsForm, ...response }
-      this.voucherDetailsForm.discountMoney = parseFloat(this.voucherDetailsForm.discountMoney) || '';
       this.voucherDetailsForm.discountPercent = parseFloat(this.voucherDetailsForm.discountPercent) || '';
       this.voucherDetailsForm.image = `${this.pathImage}${response.image}` || '';
       if (response.image) {

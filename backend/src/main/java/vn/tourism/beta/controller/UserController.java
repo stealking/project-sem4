@@ -283,12 +283,11 @@ public class UserController {
         String header = request.getHeader("Authorization");
         String authToken = header.substring(7);
         String username = jwtTokenUtil.getUsernameFromToken(authToken);
-        User updateBy = userRepository.findByUsername(username);
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
             User user = JSONUtils.mapper.readValue(content, User.class);
             user.setUpdatedOn(new Date());
-
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             User addUser = userRepository.save(user);
             Long id = addUser.getId();
             if (file != null && !file.isEmpty()) {
@@ -386,12 +385,27 @@ public class UserController {
     @ResponseBody
     @PostMapping(value = "check-email")
     public ResponseEntity<?> checkEmail(
-            @RequestBody User user,
-            HttpServletRequest request
+            @RequestBody User user
     ) {
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
             User userDb = userRepository.findByEmail(user.getEmail());
+            responseHeaders.set("Content-Type", "application/json");
+            return new ResponseEntity<String>(JSONUtils.mapper.writeValueAsString(userDb), responseHeaders, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @ResponseBody
+    @PostMapping(value = "check-username")
+    public ResponseEntity<?> checkUsername(
+            @RequestBody User user
+    ) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        try {
+            User userDb = userRepository.findByUsername(user.getUsername());
             responseHeaders.set("Content-Type", "application/json");
             return new ResponseEntity<String>(JSONUtils.mapper.writeValueAsString(userDb), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {

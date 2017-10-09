@@ -1,30 +1,28 @@
 <template>
   <el-row :gutter="20" class="login-main" style="margin-left: 0; margin-right: 0;">
     <el-col :span="12" :offset="6">
-      <div class="right-side-content">
-        <div class="panel" style="margin-top: 20px; background-color: white; padding: 10px">
-          <h2 class="text-center">Register</h2>
-          <el-row :gutter="20">
-            <el-col :span="22">
-              <div class="detail-content">
-                <el-form :model="ruleForm" label-width="100px" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-                  <el-form-item label="Email" prop="email">
-                    <el-input v-model="ruleForm.email"></el-input>
-                  </el-form-item>
-                  <el-form-item label="Username" prop="username">
-                    <el-input v-model="ruleForm.username"></el-input>
-                  </el-form-item>
-                  <el-form-item label="Password" prop="pass">
-                    <el-input type="password" v-model="ruleForm.pass" auto-complete="off"></el-input>
-                  </el-form-item>
-                  <el-form-item class="text-center">
-                    <el-button type="success" @click="submitForm('ruleForm')">Submit</el-button>
-                  </el-form-item>
-                </el-form>
-              </div>
-            </el-col>
-          </el-row>
-        </div>
+      <div class="panel" style="margin-top: 20vh; background-color: white; padding: 10px">
+        <h2 class="text-center">Register</h2>
+        <el-row :gutter="20">
+          <el-col :span="22">
+            <div class="detail-content">
+              <el-form :model="ruleForm" label-width="100px" :rules="rules" ref="ruleForm" class="demo-ruleForm">
+                <el-form-item label="Email" prop="email">
+                  <el-input v-model="ruleForm.email" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                </el-form-item>
+                <el-form-item label="Username" prop="username">
+                  <el-input v-model="ruleForm.username" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                </el-form-item>
+                <el-form-item label="Password" prop="pass">
+                  <el-input type="password" v-model="ruleForm.pass" auto-complete="off" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                </el-form-item>
+                <el-form-item class="text-center">
+                  <el-button type="success" @click="submitForm('ruleForm')">Submit</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
+          </el-col>
+        </el-row>
       </div>
     </el-col>
   </el-row>
@@ -33,9 +31,33 @@
 
 import service from '../../Admin/services';
 import router from '../../../router';
+import auth from '../../../auth';
 
 export default {
   data() {
+    var checkEmail = (rule, value, callback) => {
+      setTimeout(() => {
+        service.checkEmail(value).then((response) => {
+          if (response) {
+            return callback(new Error('This email was exist!'));
+          } else {
+            callback();
+          }
+        });
+      }, 1000);
+    };
+    var checkUsername = (rule, value, callback) => {
+      setTimeout(() => {
+        service.checkUsername(value).then((response) => {
+          console.log(response);
+          if (response) {
+            return callback(new Error('This username was exist!'));
+          } else {
+            callback();
+          }
+        });
+      }, 1000);
+    };
     return {
       pathImage: 'http://localhost:8080/upload/',
       fileImage: File,
@@ -49,10 +71,12 @@ export default {
         email: [
           { required: true, message: 'Please input email address', trigger: 'blur' },
           { type: 'email', message: 'Please input correct email address', trigger: 'blur,change' },
+          { validator: checkEmail, trigger: 'blur' }
         ],
         username: [
           { required: true, message: 'Please input username', trigger: 'blur' },
           { min: 3, message: 'Length should be min 3', trigger: 'blur' },
+          { validator: checkUsername, trigger: 'blur' }
         ],
         pass: [
           { required: true, message: 'Please input password', trigger: 'blur' },
@@ -68,31 +92,26 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          service.checkEmail(this.ruleForm.email).then((res) => {
-            if (res === false) {
-              this.$message.warning('This email is exist.');
-            } else {
-              const user = {
-                email: this.ruleForm.email,
-                username: this.ruleForm.username,
-                password: this.ruleForm.pass,
-                firstName: this.ruleForm.firstName,
-                lastName: this.ruleForm.lastName,
-                address: this.ruleForm.address,
-                phone: this.ruleForm.phone,
-                dob: this.ruleForm.dob,
-                authorities: [{id: 3}],
-              };
-              service.createUser(user).then((response) => {
-                if (response.status === 200) {
-                  this.$message.success('Create successed!');
-                  router.push({ path: '/' });
-                } else {
-                  this.$message.error('Create failed!');
-                }
-              });
-            }
-          });
+            const user = {
+              email: this.ruleForm.email,
+              username: this.ruleForm.username,
+              password: this.ruleForm.pass,
+              firstName: this.ruleForm.firstName,
+              lastName: this.ruleForm.lastName,
+              address: this.ruleForm.address,
+              phone: this.ruleForm.phone,
+              dob: this.ruleForm.dob,
+              authorities: [{ id: 3 }],
+            };
+            service.createUser(user).then((response) => {
+              if (response.status === 200) {
+                this.$message.success('Create successed! Please Login!');
+                auth.logout();
+                router.push({ name: 'Login' });
+              } else {
+                this.$message.error('Create failed!');
+              }
+            });
         } else {
           return this.$message.error('Some field is not valid!');
         }
@@ -122,7 +141,6 @@ export default {
 }
 
 .login-main {
-
   height: 100vh;
   top: 0px;
   right: 0px;

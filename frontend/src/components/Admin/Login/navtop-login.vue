@@ -1,8 +1,8 @@
 <template lang="pug">
+
 </template>
     
 <script>
-
 export default {
   name: 'navtop-login',
   methods: {

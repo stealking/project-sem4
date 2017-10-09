@@ -189,7 +189,7 @@ public class VoucherController {
         Sort.Direction sortDirection = Sort.Direction.ASC;
         if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
         PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-        Iterable<Voucher> vouchers = voucherRepository.findByContentContainingOrDiscountMoneyContainingOrDiscountPercentContainingAndEnableTrue(pageRequest, search, search, search);
+        Iterable<Voucher> vouchers = voucherRepository.findByContentContainingOrDiscountPercentContainingOrIntroductionContainingAndEnableTrue(pageRequest, search, search, search);
 
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Content-Type", "application/json");

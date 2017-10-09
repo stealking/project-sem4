@@ -13,5 +13,5 @@ public interface VoucherRepository extends PagingAndSortingRepository<Voucher, L
     Page<Voucher> findAllByEnableEquals(Boolean enable, Pageable pageable);
     List<Voucher> findAllByEnableEquals(Boolean enable);
     Voucher findByIdAndEnableEquals(Long id, Boolean enable);
-    Page<Voucher> findByContentContainingOrDiscountMoneyContainingOrDiscountPercentContainingAndEnableTrue(Pageable pageable, String content, String discountMoney, String discountPercent);
+    Page<Voucher> findByContentContainingOrDiscountPercentContainingOrIntroductionContainingAndEnableTrue(Pageable pageable, String content, String discountPercent, String introduction);
 }

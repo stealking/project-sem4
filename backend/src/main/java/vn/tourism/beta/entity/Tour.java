@@ -35,20 +35,20 @@ public class Tour {
     @JoinColumn(name="tourTypeId")
     private TourType tourType;
 
-    @Column(name = "journey", length = 500)
-    private String journey;
+    @OneToOne
+    @JoinColumn(name="departureId")
+    private Departure departure;
 
-    @Column(name = "departmentPoint", length = 500)
-    private String departmentPoint;
+    @OneToOne
+    @JoinColumn(name="journeyId")
+    private Journey journey;
+
+    @OneToOne
+    @JoinColumn(name="transportId")
+    private Transport transport;
 
     @Column(name = "totalTime", length = 500)
     private String totalTime;
-
-    @Column(name = "destination", length = 500)
-    private String destination;
-
-    @Column(name = "transport", length = 500)
-    private String transport;
 
     @ManyToOne
     @JoinColumn(name = "updatedBy", updatable = false, insertable = false, referencedColumnName = "id")

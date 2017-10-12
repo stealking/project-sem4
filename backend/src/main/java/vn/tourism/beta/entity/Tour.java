@@ -15,6 +15,12 @@ public class Tour {
     @Column(name = "id", nullable = false, unique = true)
     private Long id;
 
+    @Column(name = "price")
+    private Long price;
+
+    @Column(name = "saleOff")
+    private Boolean saleOff;
+
     @Column(name = "image", length = 50)
     private String image;
 

@@ -51,7 +51,25 @@ public class TourSpecification {
             return (root, query, cb) -> cb.equal(root.join("tourType").get("id"), Long.parseLong(id));
         }
     }
-
+    public static Specification<Tour> priceIn(String price) {
+        if (price == null) {
+            return null;
+        } else {
+            String[]prices = price.split(",");
+            String minPrice = prices[0];
+            String maxPrice = prices[1];
+            // Specification using Java 8 lambdas
+            return (root, query, cb) -> cb.between(root.get("price"), Long.parseLong(minPrice), Long.parseLong(maxPrice));
+        }
+    }
+    public static Specification<Tour> saleOff(String saleOff) {
+        if (saleOff == null) {
+            return null;
+        } else {
+            // Specification using Java 8 lambdas
+            return (root, query, cb) -> cb.equal(root.get("saleOff"), "1".equals(saleOff));
+        }
+    }
     public  Iterable<Tour> findAllQuery(Map<String, String> filter, Pageable pageable) {
         return tourRepository2.findAll(
                 Specifications
@@ -59,6 +77,8 @@ public class TourSpecification {
                         .and(routeNameContains(filter.get("routeName")))
                         .and(journeyNameContains(filter.get("journeyName")))
                         .and(tourTypeIdEquals(filter.get("tourTypeId")))
+                        .and(priceIn(filter.get("price")))
+                        .and(saleOff(filter.get("saleOff")))
                 ,pageable
         )
         ;

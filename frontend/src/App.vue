@@ -108,11 +108,12 @@ p
   text-shadow 1px 1px 2px #000000;
 ._card
   width 320px
-
+.el-select
+  width 100%
 eval(i)
   if i == 0
     return initial!important
-  return i rem
+  return (0.5 * i) rem
 
 evals(i)
   if i == 0

@@ -4,21 +4,21 @@ import request from 'superagent';
 // import config from '../../config'
 
 const state = {
-  departures: [],
+  transports: [],
 };
 
 const getters = {
-  depatures: state => ({
-    departures: state.departures,
+  transports: state => ({
+    transports: state.transports,
   }),
 };
 
 
 const actions = {
-  fetchDepartures({ commit }, { from, to }) {
+  fetchTransports({ commit }, { from, to }) {
     return new Promise((resolve, reject) => {
       request
-        .get(`http://localhost:8080/custom-api/departures?page=1&paging=100&sort=desc&column=id`)
+        .get(`http://localhost:8080/custom-api/transports?page=1&paging=100&sort=desc&column=id`)
         .set('Authorization', `Bearer ${localStorage.getItem('token')}`)
         .then((res) => {
           resolve(res.body);

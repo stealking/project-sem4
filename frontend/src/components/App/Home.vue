@@ -86,8 +86,6 @@ export default {
   methods: {
     getWindowWidthDebounce: _.debounce(function getWindowWidth(event) {
       this.windowWidth = document.documentElement.clientWidth;
-      console.log(this.windowWidth);
-      console.log(typeof this.windowWidth);
     }, 300),
   },
   beforeDestroy() {

@@ -1,15 +1,17 @@
 <template lang="pug">
 v-app#inspire
   div.icon-color.card__text.indigo(xs12) Thông tin tài khoản  
-  v-alert.success.mb-5(icon="check_circle" value="true" v-model="alert") Cập nhật thành công!
+  v-alert.success.mb-5(icon="check_circle" value="true" v-model="alert") {{ this.alertContent }}
   v-container(fluid)
     v-layout(row, wrap)
       v-flex(xs12, md3, justify-center, layout, column)
         v-flex(align--center)
-          v-avatar.grey.lighten-4(:size="avatarSize")
-            img(:src="getImage()"  alt='avatar')
-        v-flex(align--center)
-          div(style="width: 80%")
+          v-avatar.grey.lighten-4(v-if="this.user.avatar !== null" :size="avatarSize")
+            img(:src="getImage()" alt='avatar')
+          v-avatar.grey.lighten-4(v-else :size="avatarSize")
+            img(src="/static/no-image.png" alt='avatar')
+        v-flex.input-file-margin(align--center)
+          div(style="width: 90%")
             v-text-field(prepend-icon='attach_file', single-line, v-model='fileName', :label='label', @click.native='onFocus', :disabled='disabled', ref='fileTextField')
             input(hidden, type='file', :accept='accept', :multiple='false', :disabled='disabled', ref='fileInput', @change='onFileChange')
 
@@ -69,6 +71,7 @@ export default {
   data() {
     return {
       alert: false,
+      alertContent: '',
       pathImage: 'http://localhost:8080/upload/',
       fileName: '',
       valid: false,
@@ -102,11 +105,11 @@ export default {
     }
   },
   mounted() {
+    moment.locale('vi');
     this.fileName = this.value;
     service.getUserInfo().then((response) => {
       this.user = {...this.user, ...response};
       this.user.dob = this.convertToDateTime(this.user.dob);
-      this.pathImage = `${this.pathImage}${this.user.avatar}`;
     });
   },
   computed: {
@@ -118,11 +121,10 @@ export default {
     submit() {
       if (this.$refs.form.validate()) {
         service.updateUser(this.user, null).then((response) => {
-          this.pathImage = '';
           this.user = response.data;
           this.user.dob = this.convertToDateTime(this.user.dob);
-          this.pathImage = `http://localhost:8080/upload/${this.user.avatar}`;
           this.alert = true;
+          this.alertContent = "Cập nhật thông tin thành công!";
           setTimeout(() => {
             this.alert = false;
           }, 3000);
@@ -130,7 +132,10 @@ export default {
       }
     },
     convertToDateTime(date) {
-      let dateString = moment(date).format('L');
+      let dateString = moment(date).format('YYYY-MM-DD');
+      if (dateString === 'Invalid date') {
+        dateString = '';
+      }
       return dateString;
     },
     getImage(){
@@ -163,10 +168,10 @@ export default {
       this.$emit('input', this.fileName);
       this.$emit('formData', form);
       service.updateUser(this.user, files[0]).then((response) => {
-        this.pathImage = '';
         this.user = response.data;
-        this.pathImage = `http://localhost:8080/upload/${this.user.avatar}`;
+        this.user.dob = this.convertToDateTime(this.user.dob);
         this.alert = true;
+        this.alertContent = "Cập nhật hình ảnh thành công!";
         setTimeout(() => {
           this.alert = false;
         }, 3000);
@@ -181,4 +186,7 @@ export default {
   color: white
 .align--center
   text-align: center
+@media screen and (min-width: 1024px)
+  .input-file-margin
+    margin-top: -200px
 </style>

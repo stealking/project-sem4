@@ -1,31 +1,32 @@
 <template>
-  <el-row :gutter="20" class="login-main" style="margin-left: 0; margin-right: 0;">
-    <el-col :span="12" :offset="6">
-      <div class="panel" style="margin-top: 20vh; background-color: white; padding: 10px">
-        <h2 class="text-center">Register</h2>
-        <el-row :gutter="20">
-          <el-col :span="22">
-            <div class="detail-content">
-              <el-form :model="ruleForm" label-width="100px" :rules="rules" ref="ruleForm" class="demo-ruleForm">
-                <el-form-item label="Email" prop="email">
-                  <el-input v-model="ruleForm.email" @keyup.enter.native="submitForm('ruleForm')"></el-input>
-                </el-form-item>
-                <el-form-item label="Username" prop="username">
-                  <el-input v-model="ruleForm.username" @keyup.enter.native="submitForm('ruleForm')"></el-input>
-                </el-form-item>
-                <el-form-item label="Password" prop="pass">
-                  <el-input type="password" v-model="ruleForm.pass" auto-complete="off" @keyup.enter.native="submitForm('ruleForm')"></el-input>
-                </el-form-item>
-                <el-form-item class="text-center">
-                  <el-button type="success" @click="submitForm('ruleForm')">Submit</el-button>
-                </el-form-item>
-              </el-form>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-    </el-col>
-  </el-row>
+  <div>
+    <v-snackbar class="mg-top" color="error" timeout="5000" top="true" center="true" v-model="snackbar">
+      {{ text }}
+    </v-snackbar>
+    <v-container style="margin-top: 18vh">
+      <v-layout row wrap>
+        <v-flex md4 offset-md4 sm6 offset-sm3 xs12>
+          <div class="card card-login">
+            <h4 class="header-title">Register</h4>
+            <v-form v-model="valid" ref="form" lazy-validation>
+              <v-flex xs12>
+                <v-text-field type="email" class="black--text" color="purple darken-2" v-model="email" label="Email" prepend-icon="fa-envelope" :rules="emailRules" required></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" required></v-text-field>
+              </v-flex>
+              <v-flex xs12>
+                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" required></v-text-field>
+              </v-flex>
+              <div class="white--text text-xs-center">
+                <v-btn class="btn-rose mt-3 header-title" @click="submitForm" flat large>Get started</v-btn>
+              </div>
+            </v-form>
+          </div>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 <script>
 
@@ -35,133 +36,134 @@ import auth from '../../../auth';
 
 export default {
   data() {
-    var checkEmail = (rule, value, callback) => {
-      setTimeout(() => {
-        service.checkEmail(value).then((response) => {
-          if (response) {
-            return callback(new Error('This email was exist!'));
-          } else {
-            callback();
-          }
-        });
-      }, 1000);
-    };
-    var checkUsername = (rule, value, callback) => {
-      setTimeout(() => {
-        service.checkUsername(value).then((response) => {
-          console.log(response);
-          if (response) {
-            return callback(new Error('This username was exist!'));
-          } else {
-            callback();
-          }
-        });
-      }, 1000);
-    };
     return {
-      pathImage: 'http://localhost:8080/upload/',
-      fileImage: File,
-      ruleForm: {
-        id: '',
-        email: '',
+      valid: false,
+      color: '',
+      snackbar: false,
+      text: '',
+      credentials: {
         username: '',
-        pass: '',
+        password: '',
       },
-      rules: {
-        email: [
-          { required: true, message: 'Please input email address', trigger: 'blur' },
-          { type: 'email', message: 'Please input correct email address', trigger: 'blur,change' },
-          { validator: checkEmail, trigger: 'blur' }
-        ],
-        username: [
-          { required: true, message: 'Please input username', trigger: 'blur' },
-          { min: 3, message: 'Length should be min 3', trigger: 'blur' },
-          { validator: checkUsername, trigger: 'blur' }
-        ],
-        pass: [
-          { required: true, message: 'Please input password', trigger: 'blur' },
-          { min: 6, message: 'Length should be min 6', trigger: 'blur' },
-        ],
-        // phone: [
-        //   { validator: checkPhone, trigger: 'blur' },
-        // ],
-      },
+      error: '',
+      email: '',
+      username: '',
+      pass: '',
+      usernameRules: [
+        (v) => !!v || 'Bắt buộc',
+        (v) => v && v.length >= 4 || 'Tài khoản phải nhiều hơn 4 kí tự'
+      ],
+      passwordRules: [
+        (v) => !!v || 'Bắt buộc',
+        (v) => v && v.length >= 4 || 'Mật khẩu phải nhiều hơn 4 kí tự'
+      ],
+      emailRules: [
+        (v) => !!v || 'Bắt buộc',
+        (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail không hợp lệ'
+      ],
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-            const user = {
-              email: this.ruleForm.email,
-              username: this.ruleForm.username,
-              password: this.ruleForm.pass,
-              firstName: this.ruleForm.firstName,
-              lastName: this.ruleForm.lastName,
-              address: this.ruleForm.address,
-              phone: this.ruleForm.phone,
-              dob: this.ruleForm.dob,
-              authorities: [{ id: 3 }],
-            };
-            console.log(JSON.stringify(user))
-            service.createUser(user).then((response) => {
-              if (response.status === 200) {
-                this.$message.success('Create successed! Please Login!');
-                auth.logout();
-                router.push({ name: 'Login' });
-              } else {
-                this.$message.error('Create failed!');
-              }
-            });
-        } else {
-          return this.$message.error('Some field is not valid!');
-        }
-        return true;
-      });
+    submitForm() {
+      if (this.$refs.form.validate()) {
+        const user = {
+          email: this.email,
+          username: this.username,
+          password: this.pass,
+        };
+        service.createUser(user).then((response) => {
+          if (response.status === 200) {
+            this.color = 'success';
+            this.text = 'Đăng kí không thành công!';
+            this.snackbar = true;
+            auth.logout();
+            router.push({ name: 'Login' });
+          } else {
+            this.color = 'error';
+            this.text = 'Đăng kí không thành công!';
+            this.snackbar = true;
+          }
+        });
+      };
+
     },
   },
 };
 
 </script>
 <style scope>
-.right-side-content {
-  padding: 0 10px 0 10px;
+.mg-top {
+  margin-top: 80px;
 }
 
-.content-header {
-  background-color: #FAFAFA;
-  padding: 0 10px 10px 10px;
-  /* box-shadow: 0 2px 18px #E5E5E5; */
-  border-radius: 4px;
-}
 
-.panel {
-  border: 1px solid #dcdcdc;
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
-}
-
-.login-main {
-  height: 100vh;
-  top: 0px;
-  right: 0px;
-  margin-top: 0px;
-  position: absolute;
+.card {
+  display: inline-block;
+  position: relative;
   width: 100%;
-  margin-left: 0px;
-  background: url(../../../../static/1.jpg)no-repeat center top;
-  background-size: cover;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  -ms-background-size: cover;
-  background-attachment: fixed;
-  background-position: center;
-  font-family: 'Open Sans', sans-serif;
+  margin: 25px 0;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.87);
+  background: #fff;
+  border-radius: 3px;
+  padding: 15px;
 }
 
-.text-center {
+.card-login {
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.14);
+  border-radius: 6px;
+  padding-bottom: 20px;
+  -webkit-transform: translate3d(0, 0, 0);
+  -moz-transform: translate3d(0, 0, 0);
+  -o-transform: translate3d(0, 0, 0);
+  -ms-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+}
+
+.card-header {
+  margin-top: -40px;
+  margin-bottom: 20px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+.card-title {
+  padding-top: 25px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.card-login .social-line {
+  margin-top: 15px;
   text-align: center;
+  padding: 20px;
+}
+
+.btn-just-icon {
+  font-size: 20px;
+  padding: 20px 20px;
+  line-height: 1em;
+}
+
+.btn-rose {
+  background-color: #7b1fa2!important;
+  color: white!important;
+  box-shadow: none;
+  border-radius: 50px;
+  text-transform: none;
+} 
+
+.application--light .input-group:not(.input-group--error):not(.input-group--focused) .input-group__input .input-group__append-icon,
+.application--light .input-group:not(.input-group--error):not(.input-group--focused) .input-group__input .input-group__prepend-icon {
+  color: black;
+}
+
+.header-title {
+  text-align: center;
+  font-weight: 300;
+  line-height: 1.5em;
 }
 </style>
 

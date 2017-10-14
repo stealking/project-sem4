@@ -22,7 +22,7 @@ function guardRoute(to, from, next) {
   auth.checkAuth();
   if (!auth.user.authenticated) {
     next({
-      path: '/login',
+      path: '/pages/login',
       query: { redirect: to.path },
     });
   } else {

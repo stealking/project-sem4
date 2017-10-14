@@ -27,12 +27,10 @@ export default {
     .then((response) => {
       localStorage.setItem('access_token', response.data.token);
       this.user.authenticated = true;
-      // rediect to specified route
-      if (redirect) {
-        router.push({ path: '/' });
-      }
-      return response;
-    }).catch(e => e);
+      return response.status;
+    }).catch((err) =>{ 
+      return err.response.status;
+    });
   },
   logout() {
     localStorage.removeItem('access_token');

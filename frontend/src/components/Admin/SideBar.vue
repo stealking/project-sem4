@@ -59,14 +59,11 @@
 </template>
 
 <script>
-import Login from './Login/index';
 import auth from '../../auth';
 import router from '../../router';
 
 export default {
   name: 'sidebar',
-  components: { Login },
-
   data() {
     return {
     };

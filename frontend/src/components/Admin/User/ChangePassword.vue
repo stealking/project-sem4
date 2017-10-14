@@ -72,7 +72,6 @@ export default {
   },
   created() {
     service.getUserInfo().then((response) => {
-      console.log(response);
       this.user = response;
     });
   },

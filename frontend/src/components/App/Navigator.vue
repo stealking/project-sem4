@@ -137,7 +137,7 @@ export default {
         header: { title: 'User', icon: 'fa-user' },
         items: [
           { title: 'Login', icon: 'fa-sign-in', click: 4 },
-          { title: 'Register', icon: 'fa-registered', click: 1 },
+          { title: 'Register', icon: 'fa-user-plus', click: 1 },
         ],  
       },
       menus: {

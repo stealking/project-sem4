@@ -96,6 +96,7 @@ p
 .row600
   @media (min-width: 600px)
     flex-direction row
+
 .fw
   flex-wrap wrap
 .sd

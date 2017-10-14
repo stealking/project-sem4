@@ -23,6 +23,7 @@ import vn.tourism.beta.storage.StorageService;
 import vn.tourism.beta.utils.JSONUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -104,6 +105,40 @@ public class TourDetailController {
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @ResponseBody
+    @GetMapping(value = "custom-api/tourDetails-by-tourRegisters")
+    public ResponseEntity<?> getAllTourDetailsByTourRegisters(
+            HttpServletRequest request,
+            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "sort", defaultValue = "asc") String sort,
+            @RequestParam(name = "column", defaultValue = "id") String column,
+            @RequestParam(name = "paging", defaultValue = "5") int maxResult
+    ) {
+
+        String header = request.getHeader("Authorization");
+        String authToken = header.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        User representUser = userRepository.findByUsername(username);
+
+        Sort.Direction sortDirection = Sort.Direction.ASC;
+        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
+
+        PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
+        List<Long> ids = new ArrayList<>();
+        ids.add(representUser.getId());
+        ids.add(new Long("3"));
+        Iterable<TourDetail> tourDetails = tourDetailRepository.findAllByTourRegisters_Representative_idEqualsAndEnableEquals(pageRequest, representUser.getId(), true);
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        try {
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tourDetails), responseHeaders, HttpStatus.OK);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @Secured("ROLE_ADMIN")
     @ResponseBody
@@ -150,7 +185,7 @@ public class TourDetailController {
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
             tourDetail.setUpdatedOn(new Date());
-            tourDetail.setUpdatedBy(updateBy);
+//            tourDetail.setUpdatedBy(updateBy);
             TourDetail addTourDetail = tourDetailRepository.save(tourDetail);
             responseHeaders.set("Content-Type", "application/json");
             return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(addTourDetail), responseHeaders, HttpStatus.OK);
@@ -173,7 +208,7 @@ public class TourDetailController {
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
             tourDetail.setUpdatedOn(new Date());
-            tourDetail.setUpdatedBy(updateBy);
+//            tourDetail.setUpdatedBy(updateBy);
             TourDetail updatedTourDetail = tourDetailRepository.save(tourDetail);
             responseHeaders.set("Content-Type", "application/json");
             return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(updatedTourDetail), responseHeaders, HttpStatus.OK);

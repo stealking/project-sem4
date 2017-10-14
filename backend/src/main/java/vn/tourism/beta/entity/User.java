@@ -2,6 +2,10 @@ package vn.tourism.beta.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -77,7 +81,8 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "authority_id", referencedColumnName = "id")})
     private List<Authority> authorities;
 //
-//    @OneToMany(mappedBy="user")
+//    @OneToMany(mappedBy="representative",fetch=FetchType.EAGER)
+//    @Fetch(value = FetchMode.SUBSELECT)
 //    private List<TourRegister> tourRegisters;
 //
 //    @OneToMany(mappedBy="user")

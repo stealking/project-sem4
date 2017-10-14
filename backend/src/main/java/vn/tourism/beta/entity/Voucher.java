@@ -1,5 +1,6 @@
 package vn.tourism.beta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,6 +43,7 @@ public class Voucher {
     private Date expiredOn;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "updatedBy", updatable = false, insertable = false, referencedColumnName = "id")
     private User updatedBy;
 

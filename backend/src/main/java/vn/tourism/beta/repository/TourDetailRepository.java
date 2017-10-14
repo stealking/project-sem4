@@ -14,4 +14,5 @@ public interface TourDetailRepository extends PagingAndSortingRepository<TourDet
     Long countAllByEnableEquals(Boolean enable);
     TourDetail findByIdAndEnableEquals(Long id, Boolean enable);
     Page<TourDetail> findAllByTour_idInAndEnableEquals(Pageable pageable, List<Long> id, Boolean enable);
+    Page<TourDetail> findAllByTourRegisters_Representative_idEqualsAndEnableEquals(Pageable pageable, Long id, Boolean enable);
 }

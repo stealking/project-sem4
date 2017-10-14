@@ -85,6 +85,7 @@ export default {
           }
         });
       };
+
     },
   },
 };
@@ -145,21 +146,6 @@ export default {
   padding: 20px 20px;
   line-height: 1em;
 }
-
-/* .btn-simple {
-  background-color: transparent;
-  color: #FFF;
-  box-shadow: none;
-  border: none;
-  border-radius: 3px;
-  position: relative;
-  text-transform: uppercase;
-  letter-spacing: 0;
-  will-change: box-shadow, transform;
-  transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-*/
 
 .btn-rose {
   background-color: #7b1fa2!important;

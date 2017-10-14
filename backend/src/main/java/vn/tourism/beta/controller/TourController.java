@@ -222,7 +222,7 @@ public class TourController {
         responseHeaders.set("Content-Type", "application/json");
         try {
             PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
-            Iterable<Tour> tours = tourSpecification.findAllQuery(filter, pageRequest);
+            Iterable<Tour> tours = tourSpecification.findAllQueryId(filter, pageRequest);
             return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
         }
         catch(Exception e){

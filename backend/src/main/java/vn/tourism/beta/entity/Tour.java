@@ -1,9 +1,11 @@
 package vn.tourism.beta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -53,10 +55,11 @@ public class Tour {
     @JoinColumn(name="transportId")
     private Transport transport;
 
-    @Column(name = "totalTime", length = 500)
-    private String totalTime;
+    @Column(name = "totalTime")
+    private Long totalTime;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "updatedBy", updatable = false, insertable = false, referencedColumnName = "id")
     private User updatedBy;
 
@@ -67,7 +70,8 @@ public class Tour {
     @Column(name = "enable")
     private Boolean enable = true;
 
-//    @OneToMany(mappedBy="tour")
-//    private List<TourDetail> tourDetails;
+    @OneToMany(mappedBy="tour")
+    @JsonIgnore
+    private List<TourDetail> tourDetails;
 
 }

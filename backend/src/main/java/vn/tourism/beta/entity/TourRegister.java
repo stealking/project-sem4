@@ -1,5 +1,6 @@
 package vn.tourism.beta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,12 +30,14 @@ public class TourRegister {
 
 
     @ManyToOne
-    @JoinColumn(name = "tourDetailId", updatable = false, insertable = false, referencedColumnName = "id")
+    @JsonIgnore
+    @JoinColumn(name = "tourDetailId")
     private TourDetail tourDetail;
 
     @ManyToOne
-    @JoinColumn(name = "representativeId", updatable = false, insertable = false, referencedColumnName = "id")
-    private User Representative;
+    @JsonIgnore
+    @JoinColumn(name = "representativeId")
+    private User representative;
 
     @Column(name = "numberAdult")
     private Long numberAdult;
@@ -44,11 +47,24 @@ public class TourRegister {
 
     @Column(name = "numberBaby")
     private Long numberBaby;
-    
+
     @Column(name = "registeredOn")
     @Temporal(TemporalType.TIMESTAMP)
     private Date registeredOn;
 
     @Column(name = "enable")
     private Boolean enable = true;
+
+//    @Override
+//    public String toString() {
+//        return "TourRegister{" +
+//                "id=" + id +
+//                ", tourDetail=" + tourDetail +
+//                ", numberAdult=" + numberAdult +
+//                ", numberChildren=" + numberChildren +
+//                ", numberBaby=" + numberBaby +
+//                ", registeredOn=" + registeredOn +
+//                ", enable=" + enable +
+//                '}';
+//    }
 }

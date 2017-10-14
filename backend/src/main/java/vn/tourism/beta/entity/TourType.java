@@ -1,5 +1,6 @@
 package vn.tourism.beta.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class TourType {
     private User updatedBy;
 
     @Column(name = "updatedOn")
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedOn;
 

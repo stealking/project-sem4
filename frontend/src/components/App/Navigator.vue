@@ -93,7 +93,7 @@ export default {
           router.push({ name: 'Register'})
           break;
         case 2:
-          router.push({ name: 'Account' })
+          router.push({ name: 'AccountInfo' })
           break;
         case 3:
           auth.logout();

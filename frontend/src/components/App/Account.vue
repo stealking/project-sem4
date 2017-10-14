@@ -1,92 +1,83 @@
 <template lang="pug">
-div.contain
-  Navigator
-  div(class="el-row")
-    div(class="el-col el-col-24 el-col-xs-24 el-col-sm-6")
-      div(class="side-nav")
-        ul
-          li(class="nav-item")
-            a(href="#") Account Info
-  _Footer
+  v-app#inspire
+    v-navigation-drawer(clipped, persistent, v-model="drawer", enable-resize-watcher, app)
+      v-list(dense, style="margin-top: 20px")
+        v-list-tile(v-for='item in menu.items', :key='item.title', @click='navigate(item.click)')
+          v-list-tile-action
+            v-icon  {{ item.icon }}
+          v-list-tile-content
+            v-list-tile-title {{ item.title }}
+    v-toolbar(fixed)
+      v-toolbar-side-icon(@click.stop='drawer = !drawer', style="color: white")
+      v-toolbar-title.white--text
+      v-btn.white--text(icon, @click="navigate(0)")
+        v-icon home
+      v-spacer
+      
+    main    
+      router-view
+    v-footer
+      v-spacer
+        div &copy; {{ new Date().getFullYear() }}
+  
 </template>
 <script>
-import Navigator from './Navigator';
-import Footer from '../_reused/Footer.vue';
+
+import router from '../../router'
+import service from '../Admin/services';
 
 export default {
   name: 'Account',
-  components: { Navigator, _Footer: Footer },
   data() {
     return {
+      drawer: true,
+      valid: false,
+      menu: {
+        items: [
+          { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 1 },
+          { title: 'Đổi mật khẩu', icon: 'fa-lock', click: 2 },
+        ],
+      },
+      user: '',
     }
-  }
+  },
+  computed: {
+    avatarSize() {
+      return `150px`;
+    }
+  },
+  
+  methods: {
+    submit() {
+      if (this.$refs.form.validate()) {
+
+      }
+    },
+    navigate(content) {
+      switch (content) {
+        case 0:
+          router.push({ name: 'Home' })
+          break;
+        case 1:
+          router.push({ name: 'AcountInfo' })
+          break;
+        case 2:
+          router.push({ name: 'AcountInfo' })
+          break;
+        default:
+          break;
+      }
+    },
+  },
 };
 </script>
 
 <style scoped lang="stylus">
-/*#carousel-view*/
-  /*height 100vh*/
-  /*.fade*/
-    /*&-enter-active, &-leave-active, &-leave-to*/
-      /*transition: .3s ease-out*/
-      /*position: absolute*/
-      /*top: 0*/
-      /*left: 0*/
+.content-margin-top 
+  margin-top: 64px
+.content-margin-bottom 
+  margin-bottom: 50px
+.icon-color 
+  color: white
 
-    /*&-enter, &-leave, &-leave-to*/
-      /*opacity: 0*/
-.carousel-layout
-  height 100vh
-  z-index 0!important
-.before-enter {
-  opacity: 0;
-}
-.enter {
-  transition: opacity 2s ease;
-}
-.wrapper
-  width 100%
-  position absolute
-  top 35%
-  background-color rgba(0,0,0,0)
-  @media(max-width: 960px)
-    top 25%
-@media(max-width: 600px)
-  .flex
-    padding-top 0px!important
-    padding-bottom 0px!important
-i.icon
-  font-size 30px!important
-  padding-top 18px!important
-.select-layout
-  margin: 0px!important;
-  /*@media(min-width: 960px)*/
-    /*.flex*/
-      /*padding 0px!important*/
-.search-button
-  margin-top 20px!important
-  margin-bottom 10px!important
-  width 100%
-.tabs__bar
-  background-color rgba(0,0,0,0.3)
-.tab-content-wrapper
-  background-color rgba(0,0,0,0.3)
-.tabs__wrapper
-  overflow-x inherit!important
-.tabs__container
-  margin-bottom 0px!important
-.carousel-img
-  filter brightness(90%)
-  height 100%
-  @media(min-width 1024px)
-    width 100%
-.tabs-layout
-  border-radius 5px
-.tabs-bar-layout
-  border-top-right-radius 5px
-  border-top-left-radius 5px
-
-@media only screen and (min-width: 600px)
-  .container
-    max-width 100%
 </style>

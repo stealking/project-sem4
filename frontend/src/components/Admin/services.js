@@ -289,7 +289,6 @@ export default {
   createTour(tour, image) {
     const newTour = JSON.stringify(tour);
     const formData = new FormData();
-    console.log(newTour);
     formData.append('content', newTour);
     formData.append('file', image);
     return axios({

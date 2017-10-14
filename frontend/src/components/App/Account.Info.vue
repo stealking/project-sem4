@@ -1,6 +1,6 @@
 <template lang="pug">
 v-app#inspire
-  div.icon-color.card__text.indigo(xs12) Thông tin tài khoản  
+  div.icon-color.card__text.purple(xs12) Thông tin tài khoản  
   v-alert.success.mb-5(icon="check_circle" value="true" v-model="alert") {{ this.alertContent }}
   v-container(fluid)
     v-layout(row, wrap)
@@ -17,24 +17,24 @@ v-app#inspire
 
       v-flex(xs12, md9)
         v-form(v-model='valid', ref='form', lazy-validation)
-          v-text-field(label='E-mail', v-model='user.email', :rules='emailRules', required='')
-          v-text-field(label='First Name', v-model='user.firstName', :rules='firstNameRules', required)
-          v-text-field(label='Last Name', v-model='user.lastName', :rules='lastNameRules', required)
-          v-text-field(label='Address', v-model='user.address')
-          v-text-field(label='Phone', v-model='user.phone')
+          v-text-field(label='E-mail', v-model='user.email', :rules='emailRules', required prepend-icon="fa-envelope-o")
+          v-text-field(label='Họ', v-model='user.lastName', :rules='lastNameRules', required prepend-icon="fa-address-book")
+          v-text-field(label='Tên', v-model='user.firstName', :rules='firstNameRules', required prepend-icon="fa-address-book-o")
+          v-text-field(label='Địa chỉ', v-model='user.address' prepend-icon="fa-address-card-o")
+          v-text-field(label='Điện thoại', v-model='user.phone' prepend-icon="phone")
           <v-menu lazy :close-on-content-click="false" v-model="menu" transition="scale-transition" offset-y full-width :nudge-right="40" max-width="290px" min-width="290px">
-            <v-text-field slot="activator" label="Picker in menu" v-model="user.dob" prepend-icon="event" readonly></v-text-field>
+            <v-text-field slot="activator" label="Chọn ngày sinh" v-model="user.dob" prepend-icon="event" readonly></v-text-field>
               <v-date-picker v-model="user.dob" no-title scrollable actions>
                 <template scope="{ save, cancel }">
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn flat color="primary" @click="cancel">Cancel</v-btn>
+                    <v-btn flat color="primary" @click="cancel">Hủy</v-btn>
                     <v-btn flat color="primary" @click="save">OK</v-btn>
                   </v-card-actions>
                 </template>
               </v-date-picker>
           </v-menu>
-          v-btn(@click='submit', :disabled='!valid') submit
+          v-btn.primary(@click='submit', :disabled='!valid') Lưu
 </template>
 <script>
 
@@ -86,16 +86,14 @@ export default {
         avatar: '',    
       },
       firstNameRules: [
-        (v) => !!v || 'First Name is required',
-        (v) => v && v.length >= 4 || 'First Name must be larger than 4 characters'
+        (v) => !!v || 'Bắt buộc',
       ],
       lastNameRules: [
-        (v) => !!v || 'Last name is required',
-        (v) => v && v.length >= 4 || 'Last name must be larger than 4 characters'
+        (v) => !!v || 'Bắt buộc',
       ],
-       emailRules: [
-        (v) => !!v || 'E-mail is required',
-        (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+      emailRules: [
+        (v) => !!v || 'Bắt buộc',
+        (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail không hợp lệ'
       ],
     }
   },

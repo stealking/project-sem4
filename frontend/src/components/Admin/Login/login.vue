@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-snackbar class="mg-top" color="error" timeout="5000" top="true" center="true" v-model="snackbar">
+    <v-snackbar class="mg-top" v-bind:class="[color]" :timeout="timeout" :top="top === 'top'" :center="center === 'center'" v-model="snackbar">
       {{ text }}
     </v-snackbar>
     <v-container style="margin-top: 18vh">
@@ -26,10 +26,10 @@
             </p>
             <v-form v-model="valid" ref="form" lazy-validation>
               <v-flex xs12>
-                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" required></v-text-field>
+                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" required></v-text-field>
+                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <div class="white--text text-xs-center">
                 <v-btn flat class="btn-rose btn-simple mt-3" @click="submitForm" large>Let's go</v-btn>
@@ -50,7 +50,11 @@ export default {
   data() {
     return {
       valid: false,
+      color: '',
       snackbar: false,
+      timeout: 5000,
+      top: 'top',
+      center: 'center',
       text: '',
       credentials: {
         username: '',
@@ -80,6 +84,7 @@ export default {
           if (response === 200) {
             router.push({ name: 'Home'});
           } else {
+            this.color= 'error';
             this.snackbar = true;
             this.text = 'Tài khoản hoặc mật khẩu không đúng!';
           }

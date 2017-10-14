@@ -96,7 +96,7 @@ export default {
 .bg-image
    background: url(../../../static/login.jpg)no-repeat center top transparent;
    opacity: .8
-.navigation-drawer ul li
+.navigation-drawer ul:not(:first-child) li
   margin-bottom 10px
   &:hover
     background-color #9c27b0!important

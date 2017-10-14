@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-snackbar class="mg-top" color="error" timeout="5000" top="true" center="true" v-model="snackbar">
+    <v-snackbar class="mg-top" v-bind:class="[color]" :timeout="timeout" :top="top === 'top'" :center="center === 'center'" v-model="snackbar">
       {{ text }}
     </v-snackbar>
     <v-container style="margin-top: 18vh">
@@ -10,13 +10,13 @@
             <h4 class="header-title">Register</h4>
             <v-form v-model="valid" ref="form" lazy-validation>
               <v-flex xs12>
-                <v-text-field type="email" class="black--text" color="purple darken-2" v-model="email" label="Email" prepend-icon="fa-envelope" :rules="emailRules" required></v-text-field>
+                <v-text-field type="email" class="black--text" color="purple darken-2" v-model="email" label="Email" prepend-icon="fa-envelope" :rules="emailRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" required></v-text-field>
+                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" required></v-text-field>
+                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <div class="white--text text-xs-center">
                 <v-btn class="btn-rose mt-3 header-title" @click="submitForm" flat large>Get started</v-btn>
@@ -40,6 +40,9 @@ export default {
       valid: false,
       color: '',
       snackbar: false,
+      timeout: 10000,
+      top: 'top',
+      center: 'center',
       text: '',
       credentials: {
         username: '',
@@ -71,21 +74,42 @@ export default {
           username: this.username,
           password: this.pass,
         };
-        service.createUser(user).then((response) => {
-          if (response.status === 200) {
-            this.color = 'success';
-            this.text = 'Đăng kí không thành công!';
+        let isExist = true;
+        service.checkEmail(this.email).then((response) => {
+          this.isExist = response;
+          if (response) {
+            this.timeout = 5000;
+            this.text = 'Email đã tồn tại!';
             this.snackbar = true;
-            auth.logout();
-            router.push({ name: 'Login' });
-          } else {
-            this.color = 'error';
-            this.text = 'Đăng kí không thành công!';
-            this.snackbar = true;
+            this.color = "error";
           }
         });
+        service.checkUsername(this.username).then((response) => {
+          this.isExist = response;
+          if (response) {
+            this.timeout = 5000;
+            this.color = 'error';
+            this.text = 'Tài khoản đã tồn tại!';
+            this.snackbar = true;
+          } 
+        });
+        if (!this.isExist) {
+          service.register(user).then((response) => {
+            if (response.status === 200) {
+              this.timeout = 10000;
+              this.color = 'success';
+              this.text = 'Đăng kí không thành công! Vui lòng kiểm tra mail để kích hoạt tài khoản.';
+              this.snackbar = true;
+              auth.logout();
+            } else {
+              this.timeout = 5000;
+              this.color = 'error';
+              this.text = 'Đăng kí không thành công!';
+              this.snackbar = true;
+            }
+          });
+        }
       };
-
     },
   },
 };
@@ -153,7 +177,7 @@ export default {
   box-shadow: none;
   border-radius: 50px;
   text-transform: none;
-} 
+}
 
 .application--light .input-group:not(.input-group--error):not(.input-group--focused) .input-group__input .input-group__append-icon,
 .application--light .input-group:not(.input-group--error):not(.input-group--focused) .input-group__input .input-group__prepend-icon {

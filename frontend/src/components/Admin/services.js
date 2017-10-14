@@ -127,6 +127,23 @@ export default {
     });;
   },
 
+  register(user) {
+    const newUser = JSON.stringify(user);
+    const formData = new FormData();
+    formData.append('content', newUser);
+    return axios({
+      method: 'post',
+      url: `${url}/registration`,
+      data: formData,
+      headers: {
+        'content-type': 'application/json',
+      },
+    }).then(response => response).catch((err) => {
+      console.log(err);
+      return (err.response);
+    });
+  },
+
   changePassword(passwordConfirm) {
     var content = JSON.stringify(passwordConfirm);
     return axios({

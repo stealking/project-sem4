@@ -17,8 +17,9 @@ div
         v-list-tile-content
           v-list-tile-title {{ item.title }}
   v-toolbar.white.toolbar-layout(:fixed="shouldAbsolute()===false" :absolute="shouldAbsolute()===true" dark)
-    v-toolbar-side-icon.hidden-m-and-up(@click.stop='drawer = !drawer')
-    v-toolbar-title Toolbar
+    v-toolbar-side-icon.hidden-sm-and-up(@click.stop='drawer = !drawer')
+    v-toolbar-title.home-content(@click="goToHome()") Trang chủ
+     v-icon.white--text(style="float: left; padding-right: 15px") home
     v-toolbar-items.hidden-sm-and-down.toolbar-items-layout
       v-menu(v-for='(menu,key) in menus' transition='scale-transition' offset-y :key='key')
         v-btn(flat slot='activator')
@@ -74,6 +75,9 @@ export default {
     }
   },
   methods: {
+    goToHome() {
+      router.push({ name: 'Home' });
+    },
     shouldAbsolute(){
       if(router.currentRoute.path === '/') return true;
       return false
@@ -120,24 +124,24 @@ export default {
         header: { title: 'User', icon: 'fa-user' },
         items: [
           { title: 'Admin', icon: 'fa-users', click: 5 },
-          { title: 'Register', icon: 'fa-registered', click: 1 },
-          { title: 'Account info', icon: 'fa-address-card', click: 2 },
-          { title: 'Log out', icon: 'fa-sign-out', click: 3 },
+          { title: 'Đăng kí', icon: 'fa-registered', click: 1 },
+          { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 2 },
+          { title: 'Đăng xuất', icon: 'fa-sign-out', click: 3 },
         ],    
       },
       userMenu: {
-        header: { title: 'User', icon: 'fa-user' },
+        header: { title: 'User', icon: 'fa-user-plus' },
         items: [
-          { title: 'Register', icon: 'fa-registered', click: 1 },
-          { title: 'Account info', icon: 'fa-address-card', click: 2 },
-          { title: 'Log out', icon: 'fa-sign-out', click: 3 },
+          { title: 'Đăng kí', icon: 'fa-registered', click: 1 },
+          { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 2 },
+          { title: 'Đăng xuất', icon: 'fa-sign-out', click: 3 },
         ],
       },
       userMenu2: {
         header: { title: 'User', icon: 'fa-user' },
         items: [
-          { title: 'Login', icon: 'fa-sign-in', click: 4 },
-          { title: 'Register', icon: 'fa-user-plus', click: 1 },
+          { title: 'Đăng nhập', icon: 'fa-sign-in', click: 4 },
+          { title: 'Đăng kí', icon: 'fa-user-plus', click: 1 },
         ],  
       },
       menus: {
@@ -193,4 +197,6 @@ i.icon
 .drawer-layout
   z-index 100
   position: fixed
+.home-content
+  cursor pointer
 </style>

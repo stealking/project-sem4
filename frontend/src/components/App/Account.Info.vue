@@ -137,7 +137,8 @@ export default {
       return dateString;
     },
     getImage(){
-      return `http://localhost:8080/upload/${this.user.avatar}?x=${Math.random() * 2}`
+      this.user.avatar =  this.user.avatar || '';
+      return this.user.avatar == '' ? '' : `http://localhost:8080/upload/${this.user.avatar}?x=${Math.random() * 2}`;
     },
     getFormData(files) {
       const data = new FormData();

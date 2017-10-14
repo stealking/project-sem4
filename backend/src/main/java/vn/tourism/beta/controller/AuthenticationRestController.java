@@ -95,7 +95,7 @@ public class AuthenticationRestController {
     }
 
     @RequestMapping(value = "registration", method = RequestMethod.POST)
-    public String registration(
+    public ResponseEntity<?> registration(
             HttpServletResponse response,
             @RequestParam("content") String content
     ) {
@@ -124,11 +124,10 @@ public class AuthenticationRestController {
             mailSender.send(recipientAddress, subject, "<a href='http://localhost:8080" + confirmationUrl + "'> Click here</a> ", params);
 
             responseHeaders.set("Content-Type", "application/json");
-            response.sendRedirect("http://localhost:8081/pages/login");
-            return null;
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(user), responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
-            return e.toString();
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @RequestMapping(value = "registration-confirm", method = RequestMethod.GET)

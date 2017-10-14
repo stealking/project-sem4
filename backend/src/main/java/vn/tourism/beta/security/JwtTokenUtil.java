@@ -1,5 +1,6 @@
 package vn.tourism.beta.security;
 
+import vn.tourism.beta.entity.User;
 import vn.tourism.beta.utils.TimeProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -121,7 +122,16 @@ public class JwtTokenUtil implements Serializable {
 
         return doGenerateToken(claims);
     }
+    public String generateToken2(User userDetails) {
+        Map<String, Object> claims = new HashMap<>();
 
+        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+
+        final Date createdDate = timeProvider.now();
+        claims.put(CLAIM_KEY_CREATED, createdDate);
+
+        return doGenerateToken(claims);
+    }
     private String doGenerateToken(Map<String, Object> claims) {
         final Date createdDate = (Date) claims.get(CLAIM_KEY_CREATED);
         final Date expirationDate = new Date(createdDate.getTime() + expiration * 1000);

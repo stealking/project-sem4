@@ -32,6 +32,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
 	compile("org.springframework.boot:spring-boot-starter-mail")
+	compile group: 'org.springframework', name: 'spring-context-support', version: '3.2.0.RELEASE'
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
 	runtime('com.h2database:h2')
 	runtime('org.postgresql:postgresql')

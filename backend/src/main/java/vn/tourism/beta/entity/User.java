@@ -64,7 +64,7 @@ public class User {
 
     @Column(name = "enable")
     @NotNull
-    private Boolean enable = true;
+    private Boolean enable = false;
 
     @Column(name = "lastPasswordResetDate")
     @Temporal(TemporalType.TIMESTAMP)

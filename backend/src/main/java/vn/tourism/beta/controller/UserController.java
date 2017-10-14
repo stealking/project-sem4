@@ -287,6 +287,7 @@ public class UserController {
         try {
             User user = JSONUtils.mapper.readValue(content, User.class);
             user.setUpdatedOn(new Date());
+            user.setEnable(true);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User addUser = userRepository.save(user);
             Long id = addUser.getId();

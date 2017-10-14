@@ -1,5 +1,15 @@
 package vn.tourism.beta.controller;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import vn.tourism.beta.entity.User;
+import vn.tourism.beta.repository.UserRepository;
 import vn.tourism.beta.security.JwtAuthenticationRequest;
 import vn.tourism.beta.security.JwtTokenUtil;
 import vn.tourism.beta.security.JwtUser;
@@ -16,12 +26,14 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import vn.tourism.beta.service.SmtpMailSender;
+import vn.tourism.beta.utils.JSONUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class AuthenticationRestController {
@@ -31,6 +43,12 @@ public class AuthenticationRestController {
     private String tokenHeader;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SmtpMailSender mailSender;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -38,8 +56,10 @@ public class AuthenticationRestController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-    @RequestMapping(value = "${jwt.route.authentication.path}", method = RequestMethod.POST)
+    @RequestMapping(value = "auth", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
         logger.info(authenticationRequest.getUsername());
         logger.info(authenticationRequest.getPassword());
@@ -72,6 +92,60 @@ public class AuthenticationRestController {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @RequestMapping(value = "registration", method = RequestMethod.POST)
+    public String registration(
+            HttpServletResponse response,
+            @RequestParam("content") String content
+    ) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        try {
+            User user = JSONUtils.mapper.readValue(content, User.class);
+            user.setUpdatedOn(new Date());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+
+            String token = jwtTokenUtil.generateToken2(user);
+
+            String recipientAddress = user.getEmail();
+            String subject = "Registration Confirmation";
+            String confirmationUrl
+                    =  "/registration-confirm?token=" + token;
+            String message = "Click để đăng nhập";
+
+            SimpleMailMessage email = new SimpleMailMessage();
+            email.setTo(recipientAddress);
+            email.setSubject(subject);
+            email.setText(message + " rn" + "http://localhost:8080" + confirmationUrl);
+//            mailSender.send(email);
+            Map<String, String> params =  new HashMap<String, String>();
+            params.put("message", message + " rn" + "http://localhost:8080" + confirmationUrl);
+            mailSender.send(recipientAddress, subject, "<a href='http://localhost:8080" + confirmationUrl + "'> Click here</a> ", params);
+
+            responseHeaders.set("Content-Type", "application/json");
+            response.sendRedirect("http://localhost:8081/pages/login");
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.toString();
+        }
+    }
+    @RequestMapping(value = "registration-confirm", method = RequestMethod.GET)
+    public String confirmRegistration(
+            HttpServletResponse response,
+            @RequestParam("token") String token) {
+        try {
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            User user = userRepository.findByUsername(username);
+            user.setEnable(true);
+            userRepository.save(user);
+            response.sendRedirect("http://localhost:8081/pages/login");
+            return null;
+        } catch (Exception e){
+            return e.toString();
+        }
+
     }
 
 }

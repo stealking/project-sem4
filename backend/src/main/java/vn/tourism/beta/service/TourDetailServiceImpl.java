@@ -28,9 +28,9 @@ public class TourDetailServiceImpl implements TourDetailService{
         if(tourDetail.getDepartmentDate() != null)TourDetailDb.setDepartmentDate(tourDetail.getDepartmentDate());
 
 
-        if(tourDetail.getTour() != null)TourDetailDb.setTour(tourDetail.getTour());
+//        if(tourDetail.getTour() != null)TourDetailDb.setTour(tourDetail.getTour());
         if(tourDetail.getUpdatedOn() != null)TourDetailDb.setUpdatedOn(new Date());
-        if(tourDetail.getUpdatedBy() != null)TourDetailDb.setUpdatedBy(tourDetail.getUpdatedBy());
+//        if(tourDetail.getUpdatedBy() != null)TourDetailDb.setUpdatedBy(tourDetail.getUpdatedBy());
 
         tourDetailRepository.save(TourDetailDb);
         return TourDetailDb;

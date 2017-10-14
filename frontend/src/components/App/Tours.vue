@@ -2,35 +2,42 @@
 doctype html
 .design
   Navigator
-  .design.f1.space-top
-    .rowStart.f1.pl1
-      .s6.bold Tiêu chí lựa chọn
-    .design.pl2.pr3
-      el-form(ref='form', :model='form'  label-width="120px")
-        el-form-item(label='Loại hình du lịch').mt1
-          el-select(v-model='form.tourType', filterable='', placeholder='Select')
-            el-option(v-for='item in optionTourTypes', :key='item.value.id', :label='item.label', :value='item.value')
+  .design.f1.space-top.column.row600.column
+    .design.searchBar
+      .rowStart.f1.pl1
+        .s6.bold Tiêu chí lựa chọn
+      .design.pl2.pr3
+        el-form(ref='form', :model='form'  label-width="120px" label-position="top")
+          el-form-item(label='Loại hình du lịch').mt1
+            el-select(v-model='form.tourTypeId', filterable='', placeholder='Select')
+              el-option(v-for='item in optionTourTypes', :key='item.value.id', :label='item.label', :value='item.value')
 
-        el-form-item(label='Phương tiện').mt1
-          el-select(v-model='form.transport', filterable='', placeholder='Select')
-            el-option(v-for='item in optionTransports', :key='item.value.id', :label='item.label', :value='item.value')
+          el-form-item(label='Phương tiện').mt1
+            el-select(v-model='form.transportId', filterable='', placeholder='Select')
+              el-option(v-for='item in optionTransports', :key='item.value.id', :label='item.label', :value='item.value')
 
-        el-form-item(label='Khuyến mãi').mt1
-          el-select(v-model='form.time', filterable='', placeholder='Select')
-            el-option(v-for='item in optionSaleOffs', :key='item.value.id', :label='item.label', :value='item.value')
+          el-form-item(label='Khuyến mãi').mt1
+            el-select(v-model='form.saleOff', filterable='', placeholder='Select')
+              el-option(v-for='item in optionSaleOffs', :key='item.value.id', :label='item.label', :value='item.value')
 
-        el-form-item(label='Nơi xuất phát').mt1
-         el-select(v-model='form.departure', filterable='', placeholder='Select')
-            el-option(v-for='item in optionDepartures', :key='item.value.id', :label='item.label', :value='item.value')
+          el-form-item(label='Nơi xuất phát').mt1
+           el-select(v-model='form.departureId', filterable='', placeholder='Select')
+              el-option(v-for='item in optionDepartures', :key='item.value.id', :label='item.label', :value='item.value')
 
-        el-form-item(label='Nơi xuất phát').mt1
-         el-select(v-model='form.journey', filterable='', placeholder='Select')
-            el-option(v-for='item in optionJourneys', :key='item.value.id', :label='item.label', :value='item.value')
+          el-form-item(label='Hành trình').mt1
+           el-select(v-model='form.journeyId', filterable='', placeholder='Select')
+              el-option(v-for='item in optionJourneys', :key='item.value.id', :label='item.label', :value='item.value')
 
-        el-form-item(label='Giá tiền').mt1
-          .pt1
-            vue-slider(v-model="priceRange" width="100%" :height="height" :dotSize="dotSize" :min="min" :max="max" disabled=false show=true tooltip="always" formatter="{value}.000.000VND" :bgStyle="bgStyle" :tooltipStyle="tooltipStyle" :processStyle="processStyle" :tooltipDir="tooltipDir")
-
+          el-form-item(label='Giá tiền').mt1
+            .pt1
+              vue-slider(v-model="form.price" width="100%" :height="height" :dotSize="dotSize" :min="min" :max="max" disabled=false show=true tooltip="hover" formatter="{value}.000.000VND" :bgStyle="bgStyle" :tooltipStyle="tooltipStyle" :processStyle="processStyle" :tooltipDir="tooltipDir")
+          el-form-item(label='Thời gian').mt1
+            .pt1
+              vue-slider(v-model="form.totalTime" width="100%" :height="height" :dotSize="dotSize" :min="min1" :max="max1" disabled=false show=true tooltip="hover" :formatter="formatter" :bgStyle="bgStyle" :tooltipStyle="tooltipStyle" :processStyle="processStyle" :tooltipDir="tooltipDir" :step="step")
+      .f1.pl2
+        v-btn(color="primary" @click="_onFind") Tìm kiếm
+    .design.f6
+      .text Hello
   .design.row.columnOnNarrow.center.fw
     Info
     Info
@@ -69,10 +76,6 @@ export default {
         value: ' ',
         label: 'Tất cả'
       }],
-      priceRange:[
-        0,
-        20
-      ],
       bgStyle:{
         "backgroundColor": "#fff",
         "boxShadow": "inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)"
@@ -86,6 +89,9 @@ export default {
       },
       min: 1,
       max: 30,
+      min1: 1,
+      max1: 10,
+      step: 0.5,
       height: 8,
       dotSize: 16,
       tooltipDir: [
@@ -93,11 +99,19 @@ export default {
         "bottom"
       ],
       form: {
-        departure: {},
-        tourType: {},
-        journey: {},
-        transport: {},
-        time: {},
+        departureId: "",
+        tourTypeId: "",
+        journeyId: "",
+        transportId: "",
+        saleOff: "",
+        price:[
+          0,
+          20
+        ],
+        totalTime:[
+          0,
+          10
+        ],
       }
     }
   },
@@ -146,7 +160,28 @@ export default {
     }, (err) => {
       console.log(err);
     });
-
+  },
+  methods:{
+    _onFind(){
+      const form =  {...this.form}
+      form.price =form.price.map(price=>price * 1000000)
+      this.$store.dispatch({
+        type: 'fetchTours',
+        query:{
+          ...form
+        }
+      }).then((res) => {
+        console.log(res)
+      }, (err) => {
+        console.log(err);
+      });
+    },
+    formatter(value){
+      let str = ''
+      str += `${Math.floor(value)} ngày`
+      if(value % 2 === 1)  str += ' 1 đêm'
+      return str
+    }
   }
 };
 </script>
@@ -156,4 +191,6 @@ export default {
   margin-top 4rem
   @media(max-width: 600px)
     margin-top 3rem
+.searchBar
+  width: 300px
 </style>

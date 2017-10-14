@@ -5,6 +5,7 @@ import departures from './departures'
 import tourTypes from './tourTypes'
 import journeys from './journeys'
 import transports from './transports'
+import tours from './tours'
 Vue.use(Vuex);
 //
 export default new Vuex.Store({
@@ -14,5 +15,6 @@ export default new Vuex.Store({
     tourTypes,
     journeys,
     transports,
+    tours,
   },
 });

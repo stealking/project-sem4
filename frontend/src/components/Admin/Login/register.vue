@@ -103,6 +103,7 @@ export default {
               dob: this.ruleForm.dob,
               authorities: [{ id: 3 }],
             };
+            console.log(JSON.stringify(user))
             service.createUser(user).then((response) => {
               if (response.status === 200) {
                 this.$message.success('Create successed! Please Login!');

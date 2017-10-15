@@ -65,7 +65,7 @@ export default {
   mounted() {
     auth.checkAuth();
     this.authenticated = auth.user.authenticated;
-    if(this.authenticated) {
+    if (this.authenticated) {
       services.getUserInfo().then((response) => {
         let authen = response.authorities;
         authen.forEach(function(element) {
@@ -78,23 +78,23 @@ export default {
     goToHome() {
       router.push({ name: 'Home' });
     },
-    shouldAbsolute(){
-      if(router.currentRoute.path === '/') return true;
+    shouldAbsolute() {
+      if (router.currentRoute.path === '/') return true;
       return false
     },
     toggleLeftSidenav() {
       this.$refs.leftSidenav.toggle();
     },
     open() {
-//      console.log('Opened: ' + ref);
+      //      console.log('Opened: ' + ref);
     },
     close() {
-//      console.log('Closed: ' + ref);
+      //      console.log('Closed: ' + ref);
     },
     navigate(content) {
-      switch(content){
-        case 1: 
-          router.push({ name: 'Register'})
+      switch (content) {
+        case 1:
+          router.push({ name: 'Register' })
           break;
         case 2:
           router.push({ name: 'AccountInfo' })
@@ -112,6 +112,9 @@ export default {
         case 6:
           router.push({ name: 'AccountChangePassword' })
           break;
+        case 7:
+          router.push({ name: 'ToursRegistered' })
+          break;
         default:
           break;
       }
@@ -123,19 +126,21 @@ export default {
       header: 'Header',
       authenticated: false,
       isAdmin: false,
-      adminMenu : {
+      adminMenu: {
         header: { title: 'User', icon: 'fa-user' },
         items: [
           { title: 'Admin', icon: 'fa-users', click: 5 },
-          { title: 'Đăng kí', icon: 'fa-registered', click: 1 },
           { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 2 },
+          { title: 'Tour đã đặt', icon: 'fa-paper-plane-o', click: 7 },
+          { title: 'Đổi mật khẩu', icon: 'fa-unlock-alt', click: 6 },
           { title: 'Đăng xuất', icon: 'fa-sign-out', click: 3 },
-        ],    
+        ],
       },
       userMenu: {
         header: { title: 'User', icon: 'fa-user-plus' },
         items: [
           { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 2 },
+          { title: 'Tour đã đặt', icon: 'fa-paper-plane-o', click: 7 },
           { title: 'Đổi mật khẩu', icon: 'fa-unlock-alt', click: 6 },
           { title: 'Đăng xuất', icon: 'fa-sign-out', click: 3 },
         ],
@@ -145,7 +150,7 @@ export default {
         items: [
           { title: 'Đăng nhập', icon: 'fa-sign-in', click: 4 },
           { title: 'Đăng kí', icon: 'fa-user-plus', click: 1 },
-        ],  
+        ],
       },
       menus: {
         bookTourMenu: {

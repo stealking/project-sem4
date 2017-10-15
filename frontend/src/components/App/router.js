@@ -2,6 +2,7 @@ import Home from '@/components/App/Home';
 import Account from '@/components/App/Account';
 import AccountInfo from '@/components/App/Account.Info';
 import AccountChangePassword from '@/components/App/Account.ChangePassword';
+import ToursRegistered from '@/components/App/Account.ToursRegistered';
 import Tour from '@/components/App/Tour';
 import Tours from '@/components/App/Tours';
 import TourDetail from '@/components/App/TourDetail';
@@ -42,6 +43,11 @@ export default [
         name: 'AccountChangePassword',
         component: AccountChangePassword,
         beforeEnter: guardRoute,
+      },
+      {
+        path: '/account/tours-registered',
+        name: 'ToursRegistered',
+        component: ToursRegistered,
       }
     ]
   }, {

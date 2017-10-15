@@ -3,16 +3,16 @@
     v-layout(row justify-center)
       v-dialog(v-model="dialog" persistent)
         v-card
-          v-card-title.headline Bạn có muốn đăng xuất?
+          v-card-title.title Bạn có muốn đăng xuất?
           v-card-actions
             v-spacer
-            v-btn.light.darken-1(flat @click="dialog = false") Không
-            v-btn.light.darken-1(flat @click="logout") Có
+            v-btn.indigo--text(outline flat @click="dialog = false") Không
+            v-btn.white--text.blue.darken-1(flat @click="logout") Có
     v-navigation-drawer(dark persistent, v-model="drawer", enable-resize-watcher, app)
       v-list.pa-0
         v-list-tile(avatar)
           v-list-tile-avatar
-            img(src="https://randomuser.me/api/portraits/men/85.jpg")
+            img(src="/static/logo.svg")
           v-list-tile-content
             v-list-tile-title.title Admin
       v-divider
@@ -50,7 +50,7 @@ export default {
         items: [
           { title: 'Trang chủ', icon: 'fa-home', click: 0 },
           { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 1 },
-          { title: 'Chuyến du lịch đã đặt', icon: 'fa-plane', click: 2 },
+          { title: 'Tour đã đặt', icon: 'fa-paper-plane-o', click: 2 },
           { title: 'Đổi mật khẩu', icon: 'fa-lock', click: 3 },
           { title: 'Đăng xuất', icon: 'fa-sign-out', click: 4 },
         ],
@@ -72,7 +72,7 @@ export default {
           router.push({ name: 'AccountInfo' })
           break;
         case 2:
-          router.push({ name: 'BookedTour' })
+          router.push({ name: 'ToursRegistered' })
           break;
         case 3:
           router.push({ name: 'AccountChangePassword' })

@@ -1,6 +1,6 @@
 <template lang="pug">
 doctype html
-div.contain
+div.contain(style="max-width: 100%")
   Navigator
   main
     section
@@ -36,7 +36,7 @@ div.contain
                     v-flex(xs10)
                       v-select(dark v-bind:items='states', v-model='e1', label='Thời gian', single-line, auto, hide-details)
                 v-flex(xs12 sm3 light)
-                  v-btn.select-layout.search-button.white--text.teal.darken-3(large) Tìm kiếm
+                  v-btn.select-layout.search-button.white--text.blue.darken-1(large) Tìm kiếm
 
     HomeBody
   _Footer

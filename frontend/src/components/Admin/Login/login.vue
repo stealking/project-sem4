@@ -7,7 +7,7 @@
       <v-layout row wrap>
         <v-flex md4 offset-md4 sm6 offset-sm3 xs12>
           <div class="card card-login">
-            <div class="card-header text-xs-center purple darken-3">
+            <div class="card-header text-xs-center purple darken-1">
               <h4 class="card-title white--text">Login</h4>
               <div class="social-line">
                 <a href="#btn" class="btn-just-icon btn-simple">
@@ -31,8 +31,13 @@
               <v-flex xs12>
                 <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
+              <div class="text-xs-right" >
+                <router-link to="/pages/forget-password">
+                  <span class="nav-label purple--text">forget password?</span>
+                </router-link>
+              </div>
               <div class="white--text text-xs-center">
-                <v-btn flat class="btn-rose btn-simple mt-3" @click="submitForm" large>Let's go</v-btn>
+                <v-btn flat class="btn-rose btn-simple mt-3" @click="submitForm" large>Đăng nhập</v-btn>
               </div>
             </v-form>
           </div>
@@ -163,7 +168,7 @@ export default {
 
 .btn-rose {
   background-color: transparent;
-  color: #7b1fa2;
+  color: #8e24aa;
   box-shadow: none;
 }
 </style>

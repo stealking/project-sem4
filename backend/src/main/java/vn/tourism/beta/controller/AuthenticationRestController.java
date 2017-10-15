@@ -124,7 +124,7 @@ public class AuthenticationRestController {
             mailSender.send(recipientAddress, subject, "<a href='http://localhost:8080" + confirmationUrl + "'> Click here</a> ", params);
 
             responseHeaders.set("Content-Type", "application/json");
-            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(user), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -143,6 +143,57 @@ public class AuthenticationRestController {
             return null;
         } catch (Exception e){
             return e.toString();
+        }
+
+    }
+
+    @RequestMapping(value = "forget-password", method = RequestMethod.POST)
+    public ResponseEntity<?> forgetPassword(
+            HttpServletResponse response,
+            @RequestParam("email") String email
+    ) {
+        HttpHeaders responseHeaders = new HttpHeaders();
+        try {
+            User user = userRepository.findByEmail(email);
+            if(user == null) {return new ResponseEntity<>(responseHeaders, HttpStatus.NOT_FOUND);}
+            String token = jwtTokenUtil.generateToken2(user);
+
+            String recipientAddress = user.getEmail();
+            String subject = "Reset password confirmation";
+            String confirmationUrl
+                    =  "/reset-password-confirm?token=" + token;
+            String message = "Click để đăng nhập";
+
+            SimpleMailMessage emailSend = new SimpleMailMessage();
+            emailSend.setTo(recipientAddress);
+            emailSend.setSubject(subject);
+            emailSend.setText(message + " rn" + "http://localhost:8080" + confirmationUrl);
+//            mailSender.send(email);
+            Map<String, String> params =  new HashMap<String, String>();
+            params.put("message", message + " rn" + "http://localhost:8080" + confirmationUrl);
+            mailSender.send(recipientAddress, subject, "<a href='http://localhost:8080" + confirmationUrl + "'> Bấm vào để reset password</a> ", params);
+
+            responseHeaders.set("Content-Type", "application/json");
+            return new ResponseEntity<>(responseHeaders, HttpStatus.OK);
+            } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @RequestMapping(value = "reset-password-confirm", method = RequestMethod.GET)
+    public ResponseEntity<?> resetPasswordConfirm(
+            HttpServletResponse response,
+            @RequestParam("token") String token) {
+        try {
+            String username = jwtTokenUtil.getUsernameFromToken(token);
+            if(username == null || username.isEmpty()){
+                response.sendRedirect("http://localhost:8081/pages/reset-password-confirm?token=");
+            }
+            response.sendRedirect("http://localhost:8081/pages/reset-password-confirm?token=" + token);
+            return null;
+        } catch (Exception e){
+            return new ResponseEntity<>(e.toString(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }

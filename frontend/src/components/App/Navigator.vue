@@ -109,6 +109,9 @@ export default {
         case 5:
           router.push({ name: 'Admin' })
           break;
+        case 6:
+          router.push({ name: 'AccountChangePassword' })
+          break;
         default:
           break;
       }
@@ -132,8 +135,8 @@ export default {
       userMenu: {
         header: { title: 'User', icon: 'fa-user-plus' },
         items: [
-          { title: 'Đăng kí', icon: 'fa-registered', click: 1 },
           { title: 'Thông tin tài khoản', icon: 'fa-address-card', click: 2 },
+          { title: 'Đổi mật khẩu', icon: 'fa-unlock-alt', click: 6 },
           { title: 'Đăng xuất', icon: 'fa-sign-out', click: 3 },
         ],
       },

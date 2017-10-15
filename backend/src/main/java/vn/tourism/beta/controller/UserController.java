@@ -365,6 +365,30 @@ public class UserController {
         }
     }
 
+    @ResponseBody
+    @PatchMapping(value = "custom-api/users/reset-password")
+    public ResponseEntity<?> resetPassword(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam("content") String content,
+            HttpServletRequest request
+    ) {
+        String header = request.getHeader("Authorization");
+        String authToken = header.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        User updateBy = userRepository.findByUsername(username);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        try {
+            User user = JSONUtils.mapper.readValue(content, User.class);
+            updateBy.setUpdatedOn(new Date());
+            updateBy.setPassword(passwordEncoder.encode(user.getPassword()));
+            User updatedUser = userRepository.save(updateBy);
+            responseHeaders.set("Content-Type", "application/json");
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(updatedUser), responseHeaders, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @ResponseBody
     @DeleteMapping(value = "custom-api/users/{id}")

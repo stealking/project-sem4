@@ -99,6 +99,6 @@ export default {
 .navigation-drawer ul:not(:first-child) li
   margin-bottom 10px
   &:hover
-    background-color #9c27b0!important
-    border-color #9c27b0!important
+    background-color #42a5f5!important
+    border-color #42a5f5!important
 </style>

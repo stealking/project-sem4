@@ -1,5 +1,5 @@
 
-INSERT INTO users (username, "password", first_name, last_name, email, enable, last_password_reset_date) VALUES ( 'admin', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'admin', 'admin', 'admin@admin.com', true, to_date('01-01-2016', 'dd-MM-yyyy'));
+INSERT INTO users (username, "password", first_name, last_name, email, enable, last_password_reset_date) VALUES ( 'admin', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'admin', 'admin', 'tansy91@gmail.com', true, to_date('01-01-2016', 'dd-MM-yyyy'));
 INSERT INTO users (username, "password", first_name, last_name, email, enable, last_password_reset_date) VALUES ( 'user', '$2a$08$lDnHPz7eUkSi6ao14Twuau08mzhWrL4kyZGGU5xfiGALO/Vxd5DOi', 'user', 'user', 'enable@user.com', true, to_date('01-01-2016', 'dd-MM-yyyy'));
 INSERT INTO users (username, "password", first_name, last_name, email, enable, last_password_reset_date) VALUES ( 'disabled', '$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC', 'user', 'user', 'disabled@user.com', false, to_date('01-01-2016', 'dd-MM-yyyy'));
 INSERT INTO users (username, "password", first_name, last_name, email, enable, last_password_reset_date) VALUES ( 'user1', '$2a$08$UkVvwpULis18S19S5pZFn.YHPZt3oaqHZnDwqbCW9pft6uFtkXKDC', 'user', 'user', 'test1@user.com', true, to_date('01-01-2016', 'dd-MM-yyyy'));

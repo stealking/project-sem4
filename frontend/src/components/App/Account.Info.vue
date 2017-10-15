@@ -1,6 +1,6 @@
 <template lang="pug">
 v-app#inspire
-  div.icon-color.card__text.purple(xs12) Thông tin tài khoản  
+  div.icon-color.card__text.blue.lighten-1(xs12) Thông tin tài khoản  
   v-alert.success.mb-5(icon="check_circle" value="true" v-model="alert") {{ this.alertContent }}
   v-container(fluid)
     v-layout(row, wrap)
@@ -34,7 +34,7 @@ v-app#inspire
                 </template>
               </v-date-picker>
           </v-menu>
-          v-btn.primary(@click='submit', :disabled='!valid') Lưu
+          v-btn.blue.lighten-1.white--text(@click='submit', :disabled='!valid') Lưu
 </template>
 <script>
 

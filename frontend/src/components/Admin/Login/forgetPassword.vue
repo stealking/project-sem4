@@ -6,22 +6,22 @@
     <v-container style="margin-top: 18vh">
       <v-layout row wrap>
         <v-flex md4 offset-md4 sm6 offset-sm3 xs12>
-          <div class="card card-login">
-            <h4 class="header-title">Register</h4>
+          <div v-if="send === false" class="card card-login">
+            <h4 class="header-title">Quên mật khẩu</h4>
+            <p>Nhập địa chỉ email để nhận đường dẫn khôi phục mật khẩu.</p>
             <v-form v-model="valid" ref="form" lazy-validation>
               <v-flex xs12>
-                <v-text-field type="email" class="black--text" color="purple darken-2" v-model="email" label="Email" prepend-icon="fa-envelope" :rules="emailRules" @keyup.enter.native="submitForm()" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" @keyup.enter.native="submitForm()" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" @keyup.enter.native="submitForm()" required></v-text-field>
+                <v-text-field type="email" class="black--text" v-model="email" label="Email" prepend-icon="fa-envelope" :rules="emailRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <div class="white--text text-xs-center">
-                <v-btn class="btn-rose mt-3 header-title" @click="submitForm" flat large>Đăng kí</v-btn>
+                <v-btn class="btn-rose mt-3 header-title" @click="submitForm" flat large>Gửi thư</v-btn>
               </div>
             </v-form>
+          </div>
+          <div v-else class="card card-login text-xs-center">
+            <h4 class="header-title blue--text">Gửi thư thành công</h4>
+            <p>Vui lòng kiểm tra email để khôi phục mật khẩu.</p>
+            <v-btn class="purple mt-3" @click="goToHome" flat large>Trang chủ</v-btn>
           </div>
         </v-flex>
       </v-layout>
@@ -37,29 +37,15 @@ import auth from '../../../auth';
 export default {
   data() {
     return {
-      valid: false,
       color: '',
       snackbar: false,
       timeout: 10000,
       top: 'top',
       center: 'center',
       text: '',
-      credentials: {
-        username: '',
-        password: '',
-      },
-      error: '',
+      valid: false,
+      send: false,
       email: '',
-      username: '',
-      pass: '',
-      usernameRules: [
-        (v) => !!v || 'Bắt buộc',
-        (v) => v && v.length >= 4 || 'Tài khoản phải nhiều hơn 4 kí tự'
-      ],
-      passwordRules: [
-        (v) => !!v || 'Bắt buộc',
-        (v) => v && v.length >= 4 || 'Mật khẩu phải nhiều hơn 4 kí tự'
-      ],
       emailRules: [
         (v) => !!v || 'Bắt buộc',
         (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail không hợp lệ'
@@ -67,48 +53,24 @@ export default {
     };
   },
   methods: {
+    goToHome() {
+      router.push({ name: 'Home' });
+    },
     submitForm() {
       if (this.$refs.form.validate()) {
-        const user = {
-          email: this.email,
-          username: this.username,
-          password: this.pass,
-        };
-        let isExist = true;
-        service.checkEmail(this.email).then((response) => {
-          this.isExist = response;
-          if (response) {
-            this.timeout = 5000;
-            this.text = 'Email đã tồn tại!';
+        service.forgetPassword(this.email).then((response) => {
+          if (response.status === 200) {
+            this.send = true;
+          } else if (response.status === 404) {
+            this.text = 'Email không tồn tại!';
+            this.color = 'error';
             this.snackbar = true;
-            this.color = "error";
+          } else {
+            this.text = 'Xảy ra lỗi trong quá trình gửi!';
+            this.color = 'error';
+            this.snackbar = true;
           }
         });
-        service.checkUsername(this.username).then((response) => {
-          this.isExist = response;
-          if (response) {
-            this.timeout = 5000;
-            this.color = 'error';
-            this.text = 'Tài khoản đã tồn tại!';
-            this.snackbar = true;
-          } 
-        });
-        if (!this.isExist) {
-          service.register(user).then((response) => {
-            if (response.status === 200) {
-              this.timeout = 10000;
-              this.color = 'success';
-              this.text = 'Đăng kí không thành công! Vui lòng kiểm tra mail để kích hoạt tài khoản.';
-              this.snackbar = true;
-              auth.logout();
-            } else {
-              this.timeout = 5000;
-              this.color = 'error';
-              this.text = 'Đăng kí không thành công!';
-              this.snackbar = true;
-            }
-          });
-        }
       };
     },
   },
@@ -172,7 +134,7 @@ export default {
 }
 
 .btn-rose {
-  background-color: #8e24aa!important;
+  background-color: #7b1fa2!important;
   color: white!important;
   box-shadow: none;
   border-radius: 50px;

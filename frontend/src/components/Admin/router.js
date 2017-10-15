@@ -13,6 +13,8 @@ import EditVoucher from '@/components/Admin/Voucher/EditVoucher';
 import NewVoucher from '@/components/Admin/Voucher/NewVoucher';
 import Pages from '@/components/Admin/Pages';
 import Register from '@/components/Admin/Login/register';
+import ForgetPassword from '@/components/Admin/Login/forgetPassword';
+import ResetPasswordConfirm from '@/components/Admin/Login/resetPasswordConfirm';
 import Login from '@/components/Admin/Login/login';
 import Profile from '@/components/Admin/User/Profile';
 import ChangePassword from '@/components/Admin/User/ChangePassword';
@@ -44,6 +46,16 @@ export default [
         path: '/pages/register',
         name: 'Register',
         component: Register,
+      },
+      {
+        path: '/pages/forget-password',
+        name: 'ForgetPassword',
+        component: ForgetPassword,
+      },
+      {
+        path: '/pages/reset-password-confirm',
+        name: 'ResetPasswordConfirm',
+        component: ResetPasswordConfirm,
       },
       {
         path: '/pages/login',

@@ -9,8 +9,8 @@
 
 <style lang="stylus">
 :root
-  --main-color #F06D06
-  --main-color-dark #b25206
+  --main-color #8433b2
+  --main-color-dark #8800c6
 
 html
   height 100%
@@ -56,20 +56,18 @@ p
   vertical-align center
 .bold
   font-weight bold
+
 .shadow
   box-shadow 0 1px 5px rgba(0,0,0,.2), 0 2px 2px rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.12)
 .button
-  padding 1rem
   background-color var(--main-color)
   color #fff
   font-size 1rem
   font-weight bold
-  flex 1
   display flex
   justify-content center
   align-items center
-  border-radius 3px
-  line-height 1rem
+  border-radius 5px
   border: 1px solid #dcdcdc;
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
   &:hover
@@ -93,10 +91,18 @@ p
 .rowEnd
   flex-direction row
   justify-content flex-end
+.columnStart
+  flex-direction column
+  justify-content flex-start
+.columnEnd
+  flex-direction column
+  justify-content flex-end
 .row600
   @media (min-width: 600px)
     flex-direction row
-
+.labelBox
+  border solid 1px #cbcbcb
+  border-radius 5px
 .fw
   flex-wrap wrap
 .sd
@@ -113,7 +119,10 @@ eval(i)
   if i == 0
     return initial!important
   return (0.5 * i) rem
-
+.cw
+  color white
+.bcp
+  background-color purple
 evals(i)
   if i == 0
     return initial!important

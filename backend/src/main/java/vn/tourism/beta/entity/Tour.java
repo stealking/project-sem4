@@ -71,7 +71,6 @@ public class Tour {
     private Boolean enable = true;
 
     @OneToMany(mappedBy="tour")
-    @JsonIgnore
     private List<TourDetail> tourDetails;
 
 }

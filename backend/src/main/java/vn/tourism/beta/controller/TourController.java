@@ -231,6 +231,38 @@ public class TourController {
         }
     }
 
+    @Secured("ROLE_ADMIN")
+    @ResponseBody
+    @GetMapping(value = "custom-api/tours-by-tourRegisters")
+    public ResponseEntity<?> findTourByUserRegister(
+            HttpServletRequest request,
+            @RequestParam Map<String, String> filter,
+            @RequestParam(name = "page", defaultValue = "1") int pageNumber,
+            @RequestParam(name = "sort", defaultValue = "asc") String sort,
+            @RequestParam(name = "column", defaultValue = "id") String column,
+            @RequestParam(name = "paging", defaultValue = "5") int maxResult
+    ) {
+
+        String header = request.getHeader("Authorization");
+        String authToken = header.substring(7);
+        String username = jwtTokenUtil.getUsernameFromToken(authToken);
+        User representUser = userRepository.findByUsername(username);
+
+        Sort.Direction sortDirection = Sort.Direction.ASC;
+        if("desc".equals(sort)) sortDirection = Sort.Direction.DESC;
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+        try {
+            PageRequest pageRequest = new PageRequest(pageNumber - 1, maxResult, sortDirection, column);
+            Iterable<Tour> tours = tourRepository.findAllByTourDetails_TourRegisters_Representative_idEqualsAndEnableEquals(pageRequest, representUser.getId(), true);
+            return new ResponseEntity<>(JSONUtils.mapper.writeValueAsString(tours), responseHeaders, HttpStatus.OK);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(e.toString(), responseHeaders, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 //    @Secured("ROLE_ADMIN")
 //    @ResponseBody
 //    @GetMapping(value = "custom-api/tours/findTourByDepPointAndDes")

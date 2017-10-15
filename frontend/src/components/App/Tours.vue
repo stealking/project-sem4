@@ -36,9 +36,32 @@ doctype html
               vue-slider(v-model="form.totalTime" width="100%" :height="height" :dotSize="dotSize" :min="min1" :max="max1" disabled=false show=true tooltip="hover" :formatter="formatter" :bgStyle="bgStyle" :tooltipStyle="tooltipStyle" :processStyle="processStyle" :tooltipDir="tooltipDir" :step="step")
       .f1.pl2
         v-btn(color="primary" @click="_onFind") Tìm kiếm
-    .design.f6
-      .text Hello
-  .design.row.columnOnNarrow.center.fw
+    .design.f6.columnStart.p3
+      .design.row
+        .design.columnStart
+          img.tour-image.sd(src="http://saigontourist.net/uploads/destination/TrongNuoc/mienbac/buckwheat-flower-season-hagiang.jpg")
+        .design.column
+          .design.f1.row
+            .design.f1.columnStart.p2
+              .s5 DU LỊCH HÀ GIANG - ĐỒNG VĂN - MÃ PÍ LÈNG - HÀ NỘI [MÙA TAM GIÁC MẠCH]
+              .s3 TP. HỒ CHÍ MINH - ĐÔNG BẮC
+              .s3 - Thăm Thôn Tha (hoặc thôn Hạ Thành), tìm hiểu phong tục tập quán và...
+              .s3 Thời gian : 5 ngày 4 đêm
+              .s3 Phương tiện : Hàng không Vietjet
+            .design.p2.button
+              .s3.text.cw.pb3 Giá từ
+              .s5.text.b.cw.pb3 7,429,000
+              .s4.text.cw Chi tiết
+          .design
+            .design.rowStart.p2
+              .design.labelBox.p1
+                .s4.text 27/10/2017
+              .design.labelBox.p1
+                .s4.text 3,259,000
+              .p2.button
+                .s4 27/10/2017
+    .design.row.columnOnNarrow.center.fw
+  .design.row
     Info
     Info
     Info
@@ -193,4 +216,7 @@ export default {
     margin-top 3rem
 .searchBar
   width: 300px
+.tour-image
+  width: 300px
+  height auto
 </style>

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import vn.tourism.beta.entity.Tour;
+import vn.tourism.beta.entity.TourDetail;
 import vn.tourism.beta.entity.TourType;
 import vn.tourism.beta.entity.Transport;
 
@@ -15,6 +16,7 @@ public interface TourRepository extends PagingAndSortingRepository<Tour, Long>, 
     Long countAllByEnableEquals(Boolean enable);
     Tour findByIdAndEnableEquals(Long id, Boolean enable);
     Page<Tour> findAllByEnableEquals(Pageable pageable, Boolean enable);
+    Page<Tour> findAllByTourDetails_TourRegisters_Representative_idEqualsAndEnableEquals(Pageable pageable, Long id, Boolean enable);
 //    Page<Tour> findByTourType_IdAndDepartmentPointIgnoreCaseContainingAndDestinationIgnoreCaseContainingAndEnableEquals(Pageable pageable, Long tourTypeId, String from, String to, Boolean enable);
 //    Page<Tour> findByTourType_IdAndEnableEquals(Pageable pageable, Long tourTypeId, Boolean enable);
 //    Page<Tour> findByDepartmentPointIgnoreCaseContainingAndDestinationIgnoreCaseContainingAndEnableEquals(Pageable pageable, String from, String to, Boolean enable);

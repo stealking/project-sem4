@@ -1,13 +1,13 @@
 <template>
   <div>
-    <v-snackbar class="mg-top" color="error" timeout="5000" top="true" center="true" v-model="snackbar">
+    <v-snackbar class="mg-top" v-bind:class="[color]" :timeout="timeout" :top="top === 'top'" :center="center === 'center'" v-model="snackbar">
       {{ text }}
     </v-snackbar>
     <v-container style="margin-top: 18vh">
       <v-layout row wrap>
         <v-flex md4 offset-md4 sm6 offset-sm3 xs12>
           <div class="card card-login">
-            <div class="card-header text-xs-center purple darken-3">
+            <div class="card-header text-xs-center purple darken-1">
               <h4 class="card-title white--text">Login</h4>
               <div class="social-line">
                 <a href="#btn" class="btn-just-icon btn-simple">
@@ -26,13 +26,18 @@
             </p>
             <v-form v-model="valid" ref="form" lazy-validation>
               <v-flex xs12>
-                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" required></v-text-field>
+                <v-text-field color="purple darken-2" v-model="username" label="Tài khoản" prepend-icon="fa-user" :rules="usernameRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <v-flex xs12>
-                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" required></v-text-field>
+                <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
+              <div class="text-xs-right" >
+                <router-link to="/pages/forget-password">
+                  <span class="nav-label purple--text">forget password?</span>
+                </router-link>
+              </div>
               <div class="white--text text-xs-center">
-                <v-btn flat class="btn-rose btn-simple mt-3" @click="submitForm" large>Let's go</v-btn>
+                <v-btn flat class="btn-rose btn-simple mt-3" @click="submitForm" large>Đăng nhập</v-btn>
               </div>
             </v-form>
           </div>
@@ -50,7 +55,11 @@ export default {
   data() {
     return {
       valid: false,
+      color: '',
       snackbar: false,
+      timeout: 5000,
+      top: 'top',
+      center: 'center',
       text: '',
       credentials: {
         username: '',
@@ -80,6 +89,7 @@ export default {
           if (response === 200) {
             router.push({ name: 'Home'});
           } else {
+            this.color= 'error';
             this.snackbar = true;
             this.text = 'Tài khoản hoặc mật khẩu không đúng!';
           }
@@ -158,7 +168,7 @@ export default {
 
 .btn-rose {
   background-color: transparent;
-  color: #7b1fa2;
+  color: #8e24aa;
   box-shadow: none;
 }
 </style>

@@ -127,6 +127,33 @@ export default {
     });;
   },
 
+  register(user) {
+    const newUser = JSON.stringify(user);
+    const formData = new FormData();
+    formData.append('content', newUser);
+    return axios({
+      method: 'post',
+      url: `${url}/registration`,
+      data: formData,
+      headers: {
+        'content-type': 'application/json',
+      },
+    }).then(response => response).catch((err) => {
+      console.log(err);
+      return (err.response);
+    });
+  },
+
+  forgetPassword(email) {
+    return axios({
+      method: 'post',
+      url: `${url}/forget-password?email=${email}`,
+    }).then(response => response).catch((err) => {
+      console.log(err);
+      return (err.response);
+    });
+  },
+
   changePassword(passwordConfirm) {
     var content = JSON.stringify(passwordConfirm);
     return axios({
@@ -142,6 +169,22 @@ export default {
     }).catch((err) => {
       return err.response;
     });
+  },
+
+  resetPassword(user, token) {
+    const content = JSON.stringify(user);
+    console.log(content);
+    const formData = new FormData();
+    formData.append('content', content);
+    return axios({
+      method: 'patch',
+      url: `${url}/custom-api/users/reset-password`,
+      data: formData,
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(response => response);
   },
 
   checkEmail(email) {

@@ -23,7 +23,7 @@
                   </el-form-item>
                   <el-form-item label="Journey" prop="journeyId">
                     <el-select v-model="tourDetailsForm.journeyId" placeholder="Select" style="width: 100%">
-                      <el-option v-for="item in optionsJourney" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                      <el-optionstyle="width: 100%" v-for="item in optionsJourney" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="Tour Type" prop="tourTypeId">

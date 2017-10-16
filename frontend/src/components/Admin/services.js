@@ -173,7 +173,6 @@ export default {
 
   resetPassword(user, token) {
     const content = JSON.stringify(user);
-    console.log(content);
     const formData = new FormData();
     formData.append('content', content);
     return axios({
@@ -375,7 +374,6 @@ export default {
     if(tourTypeId !== '0') {
       link += `&tourTypeId=${tourTypeId}`;
     }
-    console.log(link);
     return axios({
       method: 'get',
       url: `${link}`,
@@ -387,6 +385,20 @@ export default {
         return false;
       }
       return response.data;
+    });
+  },
+
+  getToursByTourRegister(){
+    return axios({
+      method: 'get',
+      url: `${url}/custom-api/tours-by-tourRegisters?page=1&paging=1000&sort=desc&column=id`,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    }).then((response) => {
+      return response.data;
+    }).catch((err) => {
+      console.log(err.response);
     });
   },
   //end tour services

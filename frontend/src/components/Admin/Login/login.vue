@@ -32,7 +32,7 @@
                 <v-text-field color="purple darken-2" type='password' v-model="pass" label="Mật khẩu" prepend-icon="fa-lock" :rules="passwordRules" @keyup.enter.native="submitForm()" required></v-text-field>
               </v-flex>
               <div class="text-xs-right" >
-                <router-link to="/pages/forget-password">
+                <router-link to="/pages/forget-password" class="text-decoration: none;">
                   <span class="nav-label purple--text">forget password?</span>
                 </router-link>
               </div>

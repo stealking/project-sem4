@@ -1,6 +1,6 @@
 <template lang="pug">
 v-app#inspire
-  div.icon-color.card__text.purple(xs12) Thay đổi mật khẩu 
+  div.icon-color.card__text.blue.lighten-1(xs12) Thay đổi mật khẩu 
   v-alert.mb-5(v-bind:class="alertType" v-bind:icon="alertIcon" value="true" v-model="alert") {{ this.alertContent }}
   v-container(fluid)
     v-layout(row, wrap)

@@ -27,19 +27,25 @@
         <nav class="navigation">
           <ul class="list-unstyled">
             <li class="profile">
-              <router-link to="/admin/user">
+              <router-link to="/" class="text-xs-left ml-3 subheading">
+                <i class="fa fa-user icon_menus"></i>
+                <span class="nav-label">Home page</span>
+              </router-link>
+            </li>
+            <li class="profile">
+              <router-link to="/admin/user" class="text-xs-left ml-3 subheading">
                 <i class="fa fa-user icon_menus"></i>
                 <span class="nav-label">User</span>
               </router-link>
             </li>
             <li>
-              <router-link to="/admin/tour">
+              <router-link to="/admin/tour" class="text-xs-left ml-3 subheading">
                 <i class="fa fa-plane icon_menus"></i>
                 <span class="nav-label">Tour</span>
               </router-link>
             </li>
             <li>
-              <router-link to="/admin/voucher">
+              <router-link to="/admin/voucher" class="text-xs-left ml-3 subheading">
                 <i class="fa fa-gift icon_menus"></i>
                 <span class="nav-label">Voucher</span>
               </router-link>
@@ -155,7 +161,6 @@ export default {
   text-align: center;
   font-weight: 600;
   line-height: 40px;
-  text-align: left;
 }
 
 .menu-account {

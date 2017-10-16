@@ -13,7 +13,7 @@
         <el-row>
           <el-col :xs="24" :sm="18" :md="16" :lg="16">
             <el-input placeholder="Please input" v-model="inputSearch" @keyup.enter.native="search()">
-              <el-select v-model="select" slot="prepend" placeholder="Select">
+              <el-select class="select-input" v-model="select" slot="prepend" placeholder="Select">
                 <el-option label="Email" value="1"></el-option>
                 <el-option label="Username" value="2"></el-option>
                 <el-option label="Address" value="3"></el-option>
@@ -324,7 +324,7 @@ export default {
   float: right;
 }
 
-.el-select .el-input {
+.select-input {
   width: 10vw;
 }
 

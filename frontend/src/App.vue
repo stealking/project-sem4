@@ -72,7 +72,8 @@ p
   box-shadow: 0 0 14px rgba(0, 0, 0, 0.2);
   &:hover
     background-color var(--main-color-dark)
-
+.buttonHeight
+  height 40px
 .bcm
   background-color var(--main-color)
 

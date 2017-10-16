@@ -49,17 +49,22 @@ doctype html
               .s3 Thời gian : 5 ngày 4 đêm
               .s3 Phương tiện : Hàng không Vietjet
             .design.p2.button
-              .s3.text.cw.pb3 Giá từ
-              .s5.text.b.cw.pb3 7,429,000
-              .s4.text.cw Chi tiết
+              .s4.text.cw.pb2 Giá từ
+              .s5.text.b.cw.pb1 7,429,000
+              .button.p1
+                .s4.text.cw Chi tiết
           .design
-            .design.rowStart.p2
-              .design.labelBox.p1
-                .s4.text 27/10/2017
-              .design.labelBox.p1
-                .s4.text 3,259,000
-              .p2.button
-                .s4 27/10/2017
+            .design.rowStart.p1.buttonHeight
+              .design.labelBox.pl4.pr4.buttonHeight.mr1
+                .s4.text
+                  i.fa.fa-calendar.mr1(aria-hidden="true")
+                  span 27/10/2017
+              .design.labelBox.pl4.pr4.buttonHeight.mr1
+                .s4.text
+                  i.fa.fa-money.mr1(aria-hidden="true")
+                  span 3,259,000
+              .p2.button.buttonHeight.mr1
+                .s4.pl4.pr4 Mua tour
     .design.row.columnOnNarrow.center.fw
   .design.row
     Info
@@ -77,6 +82,7 @@ import Footer from '../_reused/Footer.vue';
 import swipeDirective from 'vue-ui-swipe'
 import 'vue-ui-swipe/lib/ui-swiper.css'
 import vueSlider from 'vue-slider-component';
+import store from '../../store';
 
 export default {
   components: { Navigator, HomeBody, Info, _Footer: Footer, 'vue-slider': vueSlider },
@@ -135,7 +141,10 @@ export default {
           0,
           10
         ],
-      }
+        page: 1
+      },
+      tours: [],
+
     }
   },
   mounted(){
@@ -183,6 +192,21 @@ export default {
     }, (err) => {
       console.log(err);
     });
+  },
+  async beforeRouteEnter (to, from, next) {
+    const tours = await store.dispatch({
+      type: 'fetchTours',
+    }).then((res) => {
+      console.log(res)
+    }, (err) => {
+      console.log(err);
+    });
+    console.log(tours)
+    await next(vm=>{
+      vm.tours = tours
+      vm.form.page = 1
+    });
+
   },
   methods:{
     _onFind(){

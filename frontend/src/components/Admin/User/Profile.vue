@@ -10,7 +10,7 @@
         </div>
       </el-col>
       <el-col :span="18">
-        <h2>Account details</h2>
+        <h4>Account details</h4>
         <hr>
         <div class="detail-content">
           <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">

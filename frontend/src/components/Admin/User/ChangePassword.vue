@@ -2,7 +2,7 @@
   <div class="main">
     <el-row>
       <el-col :span="18" :offset="3">
-        <h2>Change password</h2>
+        <h4>Change password</h4>
         <hr>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm">
           <el-form-item label="Current password" prop="currentPass">

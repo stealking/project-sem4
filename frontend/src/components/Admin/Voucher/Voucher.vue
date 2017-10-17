@@ -34,7 +34,11 @@
         <el-table-column prop="discountPercent" label="Discount (%)" sortable="custom" />
         <el-table-column prop="introduction" label="Introduction" sortable="custom" />
         <el-table-column prop="expiredOn" label="Expired On" />
-        <el-table-column prop="image" label="Image" />
+        <el-table-column prop="image" label="Image">
+          <template scope="scope">
+            <img :src="getImage(scope.row.image)" alt="image" width="100px" height="100px"/>   
+          </template>
+        </el-table-column>
         <el-table-column label="Action">
           <template scope="scope">
             <el-row :gutter="10">
@@ -66,6 +70,7 @@ import * as moment from 'moment';
 export default {
   data() {
     return {
+      pathImage: 'http://localhost:8080/upload/',
       datas: [{
         id: '',
         image: '',
@@ -93,6 +98,11 @@ export default {
     });
   },
   methods: {
+    getImage(imageUrl) {
+      console.log(imageUrl);
+      imageUrl = imageUrl || '';
+      return imageUrl == '' ? '' : `http://localhost:8080/upload/${imageUrl}`;
+    },
     handleSizeChange(val) {
       this.pageSize = val;
       service.changePage(this.currentPage, this.type, this.pageSize, this.sort, this.column).then((response) => {

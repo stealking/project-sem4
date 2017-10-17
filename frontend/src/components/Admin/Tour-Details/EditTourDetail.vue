@@ -130,8 +130,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let tourDetails = this.tourDetailsForm;
-          this.tourDetailsForm.voucherId == '' ? null : tourDetails.voucher = { id: tourDetails.voucherId };
+          let tourDetails = { ...this.tourDetailsForm};
+          tourDetails.voucherId == '' ? null : tourDetails.voucher = { id: tourDetails.voucherId };
           delete tourDetails.voucherContent;
           delete tourDetails.voucherId;
           tourDetails.departmentDate = moment(tourDetails.departmentDate).format();

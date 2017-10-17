@@ -11,11 +11,14 @@
     <div class="panel" style="margin-top: 20px; background-color: white; padding: 10px">
       <el-row :gutter="20">
         <el-col :span="6">
-          <div class="avatar-content">
-            <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-              <img v-if="ruleForm.imageUrl" :src="ruleForm.imageUrl" class="avatar">
+          <div>
+            <div :span="24" class="text-xs-center">
+              <img v-if="ruleForm.avatar" :src="getImage()" class="avatar">
               <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-            </el-upload>
+              <div slot="tip" class="el-upload__tip">{{ fileName }}</div>
+              <el-button class="mt-4" size="small" type="primary" @click.native="onFocus">Click to upload</el-button>
+              <input hidden type="file" :accept="accept" :multiple="false" :disabled="disabled" ref="fileInput" @change="onFileChange" />
+            </div>
           </div>
         </el-col>
         <el-col :span="18">
@@ -72,25 +75,36 @@ import router from '../../../router';
 import service from '../../Admin/services';
 
 export default {
+  props: {
+    value: {
+      type: [Array, String]
+    },
+    accept: {
+      type: String,
+      default: "*"
+    },
+    label: {
+      type: String,
+      default: "Xin chọn ảnh..."
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    multiple: {
+      type: Boolean, // not yet possible because of data
+      default: false
+    }
+  },
   data() {
-    const checkPhone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('Please input phone number'));
-      }
-      setTimeout(() => {
-        if (!Number.isInteger(parseInt(value, 0))) {
-          callback(new Error('Please input digits'));
-        } else if (value.length < 10) {
-          callback(new Error('Phone number must be greater than 10'));
-        } else {
-          callback();
-        }
-      }, 1000);
-      return false;
-    };
     return {
       pathImage: 'http://localhost:8080/upload/',
-      fileImage: File,
+      fileName: '',
+      fileImage: '',
       ruleForm: {
         id: '',
         email: '',
@@ -113,9 +127,6 @@ export default {
         address: [
           { min: 3, message: 'Length should be min 3', trigger: 'blur' },
         ],
-        phone: [
-          { validator: checkPhone, trigger: 'blur' },
-        ],
       },
     };
   },
@@ -123,37 +134,62 @@ export default {
     this.ruleForm.id = this.$route.params.id;
     service.getUserById(this.ruleForm.id).then((response) => {
       this.ruleForm = { ...this.ruleForm, ...response }
-      if (response.avatar !== '' && response.avatar !== null && response.avatar !== undefined) {
-        this.ruleForm.imageUrl = `${this.pathImage}${response.avatar}`;
-      } else {
-        this.ruleForm.imageUrl = '';
-      }
+      this.getImage();
     });
   },
+   watch: {
+    value(v) {
+      this.fileName = v;
+    }
+  },
+  computed: {
+    avatarSize() {
+      return `150px`;
+    }
+  },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.ruleForm.imageUrl = URL.createObjectURL(file.raw);
-      this.fileImage = file.raw;
+    getFormData(files) {
+      const data = new FormData();
+      [...files].forEach(file => {
+        data.append('data', file, file.name); // currently only one file at a time
+      });
+      return data;
     },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('Avatar picture must be JPG format!');
+    onFocus() {
+      if (!this.disabled) {
+        this.$refs.fileInput.click();
       }
-      if (!isLt2M) {
-        this.$message.error('Avatar picture size can not exceed 2MB!');
+    },
+    onFileChange($event) {
+      const files = $event.target.files || $event.dataTransfer.files;
+      const form = this.getFormData(files);
+      if (files) {
+        if (files.length > 0) {
+          this.fileName = [...files].map(file => file.name).join(', ');
+        } else {
+          this.fileName = null;
+        }
+      } else {
+        this.fileName = $event.target.value.split('\\').pop();
       }
-      return isJPG && isLt2M;
+      this.$emit('input', this.fileName);
+      this.$emit('formData', form);
+      this.fileImage = files[0];
+    },
+    getImage() {
+      this.ruleForm.avatar = this.ruleForm.avatar || '';
+      return this.ruleForm.avatar == '' ? '' : `http://localhost:8080/upload/${this.ruleForm.avatar}?x=${Math.random() * 2}`;
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           delete this.ruleForm.imageUrl;
-          const profileUser = this.ruleForm;
+          const profileUser = {...this.ruleForm};
           service.updateUser(profileUser, this.fileImage).then((response) => {
             if (response.status === 200) {
+              console.log(response);
+              this.ruleForm = { ...this.ruleForm, ...response.data }
+              this.getImage();
               this.$message.success('Update successed!');
             } else {
               this.$message.error('Update failed!');
@@ -203,25 +239,6 @@ export default {
   border-radius: 4px;
 }
 
-.avatar-content {
-  padding: 0 10px 10px 10px;
-  margin-top: 10px;
-  text-align: center;
-  /* box-shadow: 0 2px 18px #E5E5E5; */
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
-}
-
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -229,12 +246,23 @@ export default {
   height: 150px;
   line-height: 150px;
   text-align: center;
+  border: 1px solid
 }
 
 .avatar {
   width: 150px;
   height: 150px;
   display: block;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
 }
 </style>
 

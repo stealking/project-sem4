@@ -110,10 +110,11 @@ export default {
     }).then(response => response);
   },
 
-  createUser(user) {
+  createUser(user, image) {
     const newUser = JSON.stringify(user);
     const formData = new FormData();
     formData.append('content', newUser);
+    formData.append('file', image);
     return axios({
       method: 'post',
       url: `${url}/custom-api/users`,

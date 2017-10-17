@@ -28,10 +28,13 @@
               <el-form-item label="Image" prop="image">
                 <el-col>
                   <div>
-                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                      <img v-if="voucherDetailsForm.image" :src="voucherDetailsForm.image" class="avatar">
+                    <div :span="24">
+                      <img v-if="voucherDetailsForm.image" :src="getImage()" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                    </div>
+                    <div slot="tip" class="el-upload__tip">{{ fileName }}</div>
+                    <el-button class="mt-4" size="small" type="primary" @click.native="onFocus">Click to upload</el-button>
+                    <input hidden type="file" :accept="accept" :multiple="false" :disabled="disabled" ref="fileInput" @change="onFileChange" />
                   </div>
                 </el-col>
               </el-form-item>
@@ -53,10 +56,36 @@ import service from '../services';
 import * as moment from 'moment';
 
 export default {
+  props: {
+    value: {
+      type: [Array, String]
+    },
+    accept: {
+      type: String,
+      default: "*"
+    },
+    label: {
+      type: String,
+      default: "Xin chọn ảnh..."
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    multiple: {
+      type: Boolean, // not yet possible because of data
+      default: false
+    }
+  },
   data() {
     return {
       pathImage: 'http://localhost:8080/upload/',
-      fileImage: File,
+      fileName: '',
+      fileImage: '',
       voucherDetailsForm: {
         id: '',
         image: '',
@@ -80,26 +109,47 @@ export default {
       },
     };
   },
+   watch: {
+    value(v) {
+      this.fileName = v;
+    }
+  },
+  computed: {
+    avatarSize() {
+      return `150px`;
+    }
+  },
   mounted() {
     moment.locale('vi');
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.voucherDetailsForm.image = URL.createObjectURL(file.raw);
-      this.fileImage = file.raw;
+    getFormData(files) {
+      const data = new FormData();
+      [...files].forEach(file => {
+        data.append('data', file, file.name); // currently only one file at a time
+      });
+      return data;
     },
-    beforeAvatarUpload(file) {
-      // DOM updated
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('The picture must be JPG format!');
+    onFocus() {
+      if (!this.disabled) {
+        this.$refs.fileInput.click();
       }
-      if (!isLt2M) {
-        this.$message.error('The picture size can not exceed 2MB!');
+    },
+    onFileChange($event) {
+      const files = $event.target.files || $event.dataTransfer.files;
+      const form = this.getFormData(files);
+      if (files) {
+        if (files.length > 0) {
+          this.fileName = [...files].map(file => file.name).join(', ');
+        } else {
+          this.fileName = null;
+        }
+      } else {
+        this.fileName = $event.target.value.split('\\').pop();
       }
-      return isJPG && isLt2M;
+      this.$emit('input', this.fileName);
+      this.$emit('formData', form);
+      this.fileImage = files[0];
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -158,25 +208,6 @@ export default {
   border-radius: 4px;
 }
 
-.avatar-content {
-  padding: 0 10px 10px 10px;
-  margin-top: 10px;
-  text-align: center;
-  /* box-shadow: 0 2px 18px #E5E5E5; */
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
-}
-
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -184,13 +215,25 @@ export default {
   height: 150px;
   line-height: 150px;
   text-align: center;
+  border: 1px solid
 }
 
 .avatar {
   width: 150px;
   height: 150px;
   display: block;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
 }
+
 </style>
 
 

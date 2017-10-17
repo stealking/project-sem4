@@ -10,7 +10,7 @@
     </div>
     <div class="panel" style="margin-top: 20px; background-color: white; padding: 10px">
 
-      <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tabs v-model="activeName">
         <el-tab-pane label="Tour Detail" name="first">
           <el-row :gutter="20">
             <el-col :span="24">
@@ -23,7 +23,7 @@
                   </el-form-item>
                   <el-form-item label="Journey" prop="journeyId">
                     <el-select v-model="tourDetailsForm.journeyId" placeholder="Select" style="width: 100%">
-                      <el-optionstyle="width: 100%" v-for="item in optionsJourney" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                      <el-option v-for="item in optionsJourney" :key="item.value" :label="item.label" :value="item.value"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="Tour Type" prop="tourTypeId">
@@ -37,7 +37,7 @@
                     </el-select>
                   </el-form-item>
                   <el-form-item label="Total Time" prop="totalTime">
-                    <el-input v-model="tourDetailsForm.totalTime"></el-input>
+                    <el-input v-model.number="tourDetailsForm.totalTime"></el-input>
                   </el-form-item>
                   <el-form-item label="Introduction" prop="introduction">
                     <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 10}" v-model="tourDetailsForm.introduction"></el-input>
@@ -51,10 +51,13 @@
                   <el-form-item label="Image" prop="image">
                     <el-col>
                       <div>
-                        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                          <img v-if="tourDetailsForm.image" :src="tourDetailsForm.image" class="avatar">
+                        <div :span="24">
+                          <img v-if="tourDetailsForm.image" :src="getImage()" class="avatar">
                           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
+                        </div>
+                        <div slot="tip" class="el-upload__tip">{{ fileName }}</div>
+                        <el-button class="mt-4" size="small" type="primary" @click.native="onFocus">Click to upload</el-button>
+                        <input hidden type="file" :accept="accept" :multiple="false" :disabled="disabled" ref="fileInput" @change="onFileChange" />
                       </div>
                     </el-col>
                   </el-form-item>
@@ -85,11 +88,11 @@
               <el-table-column label="Action">
                 <template scope="scope">
                   <el-row :gutter="10">
-                    <el-col :xs="24" :sm="24" :md="24" :lg="12">
+                    <el-col :xs="24" :sm="24" :md="24" class="btnEditTourDetail">
                       <el-button size="small" @click="handleEdit(scope.$index, scope.row)">
                         <i class="el-icon-edit"></i> Edit</el-button>
                     </el-col>
-                    <el-col :xs="24" :sm="24" :md="24" :lg="12">
+                    <el-col :xs="24" :sm="24" :md="24" class="btnDeleteTourDetail">
                       <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">
                         <i class="el-icon-delete"></i> Delete</el-button>
                     </el-col>
@@ -113,13 +116,61 @@ import service from '../services';
 import * as moment from 'moment';
 
 export default {
+  props: {
+    value: {
+      type: [Array, String]
+    },
+    accept: {
+      type: String,
+      default: "*"
+    },
+    label: {
+      type: String,
+      default: "Xin chọn ảnh..."
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    multiple: {
+      type: Boolean, // not yet possible because of data
+      default: false
+    }
+  },
   data() {
+    var check = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('Please choose a value!'));
+      }
+      callback();
+    }
+    var checkTotalTime = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('Please input the total time'));
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('Please input digits'));
+        } else {
+          if (value < 0) {
+            callback(new Error('Total time must be greater than 0'));
+          } else {
+            callback();
+          }
+        }
+      }, 1000);
+    };
     return {
+      fileName: '',
+      fileImage: '',
       pathImage: 'http://localhost:8080/upload/',
       optionsTransport: [],
       optionsJourney: [],
       optionsDeparture: [],
-      fileImage: File,
       activeName: 'first',
       moreDetails: [],
       total: 0,
@@ -149,6 +200,18 @@ export default {
         label: 'Khách theo đoàn'
       }],
       rules: {
+        tourTypeId: [
+          { validator: check, trigger: 'change' }
+        ],
+        transportId: [
+          { validator: check, trigger: 'change' }
+        ],
+        departureId: [
+          { validator: check, trigger: 'change' }
+        ],
+        journeyId: [
+          { validator: check, trigger: 'change' }
+        ],
         introduction: [
           { required: true, message: 'Please input introduction', trigger: 'blur' },
         ],
@@ -156,10 +219,20 @@ export default {
           { required: true, message: 'Please input detail', trigger: 'blur' },
         ],
         totalTime: [
-          { required: true, message: 'Please input total time', trigger: 'blur' },
+          { validator: checkTotalTime, trigger: 'blur' }
         ],
       },
     };
+  },
+  watch: {
+    value(v) {
+      this.fileName = v;
+    }
+  },
+  computed: {
+    avatarSize() {
+      return `150px`;
+    }
   },
   mounted() {
     moment.locale('vi');
@@ -170,11 +243,7 @@ export default {
       this.tourDetailsForm.transportId = response.transport.id;
       this.tourDetailsForm.journeyId = response.journey.id;
       this.tourDetailsForm.departureId = response.departure.id;
-      if (response.image !== '' && response.image !== null && response.image !== undefined) {
-        this.tourDetailsForm.image = `${this.pathImage}${response.image}`;
-      } else {
-        this.tourDetailsForm.image = '';
-      }
+      this.getImage();
     });
 
     service.getTourDetailsByTourId(this.tourDetailsForm.id).then((response) => {
@@ -211,38 +280,59 @@ export default {
     });
   },
   methods: {
-    handleClick(tab, event) {
+    getFormData(files) {
+      const data = new FormData();
+      [...files].forEach(file => {
+        data.append('data', file, file.name); // currently only one file at a time
+      });
+      return data;
     },
-    handleAvatarSuccess(res, file) {
-      this.tourDetailsForm.image = URL.createObjectURL(file.raw);
-      this.fileImage = file.raw;
+    onFocus() {
+      if (!this.disabled) {
+        this.$refs.fileInput.click();
+      }
     },
-    beforeAvatarUpload(file) {
-      // DOM updated
-//      const isJPG = file.type === 'image/jpeg';
-//      const isLt2M = file.size / 1024 / 1024 < 2;
-//
-//      if (!isJPG) {
-//        this.$message.error('The picture must be JPG format!');
-//      }
-//      if (!isLt2M) {
-//        this.$message.error('The picture size can not exceed 2MB!');
-//      }
-//      return isJPG && isLt2M;
+    onFileChange($event) {
+      const files = $event.target.files || $event.dataTransfer.files;
+      const form = this.getFormData(files);
+      if (files) {
+        if (files.length > 0) {
+          this.fileName = [...files].map(file => file.name).join(', ');
+        } else {
+          this.fileName = null;
+        }
+      } else {
+        this.fileName = $event.target.value.split('\\').pop();
+      }
+      this.$emit('input', this.fileName);
+      this.$emit('formData', form);
+      this.fileImage = files[0];
+    },
+    getImage() {
+      this.tourDetailsForm.image = this.tourDetailsForm.image || '';
+      return this.tourDetailsForm.image == '' ? '' : `http://localhost:8080/upload/${this.tourDetailsForm.image}?x=${Math.random() * 2}`;
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          let tour = { ...this.tourDetailsForm};
+          let tour = { ...this.tourDetailsForm };
           tour.tourType = { id: this.tourDetailsForm.tourTypeId };
-          tour.journey = {id : this.tourDetailsForm.journeyId};
-          tour.departure = { id: this.tourDetailsForm.departureId};
-          tour.transport = { id: this.tourDetailsForm.transportId};
+          tour.journey = { id: this.tourDetailsForm.journeyId };
+          tour.departure = { id: this.tourDetailsForm.departureId };
+          tour.transport = { id: this.tourDetailsForm.transportId };
           delete tour.tourTypeId;
           delete tour.departureId;
           delete tour.transportId;
           delete tour.journeyId;
           service.updateTour(tour, this.fileImage).then((response) => {
+            this.tourDetailsForm = { ...this.tourDetailsForm, ...response.data }
+            this.tourDetailsForm.tourTypeId = response.data.tourType.id;
+            this.tourDetailsForm.transportId = response.data.transport.id;
+            this.tourDetailsForm.journeyId = response.data.journey.id;
+            this.tourDetailsForm.departureId = response.data.departure.id;
+            this.fileName = '';
+            this.fileImage = '';
+            this.getImage();
             if (response.status === 200) {
               this.$message.success('Update successed!');
             } else {
@@ -359,6 +449,16 @@ export default {
 
 </script>
 <style scope>
+@media screen and (min-width: 1367px) {
+  .btnEditTourDetail {
+    width: 50%;
+  }
+
+  .btnDeleteTourDetail {
+    width: 50%;
+  }
+}
+
 .right-side-content {
   padding: 0 10px 0 10px;
 }
@@ -389,25 +489,6 @@ export default {
   border-radius: 4px;
 }
 
-.avatar-content {
-  padding: 0 10px 10px 10px;
-  margin-top: 10px;
-  text-align: center;
-  /* box-shadow: 0 2px 18px #E5E5E5; */
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
-}
-
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -415,12 +496,23 @@ export default {
   height: 150px;
   line-height: 150px;
   text-align: center;
+  border: 1px solid
 }
 
 .avatar {
   width: 150px;
   height: 150px;
   display: block;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
 }
 </style>
 

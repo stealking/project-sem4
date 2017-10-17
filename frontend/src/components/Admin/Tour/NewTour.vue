@@ -34,7 +34,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="Total Time" prop="totalTime">
-                <el-input v-model="tourDetailsForm.totalTime"></el-input>
+                <el-input v-model.number="tourDetailsForm.totalTime"></el-input>
               </el-form-item>
               <el-form-item label="Introduction" prop="introduction">
                 <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 10}" v-model="tourDetailsForm.introduction"></el-input>
@@ -48,10 +48,13 @@
               <el-form-item label="Image" prop="image">
                 <el-col>
                   <div>
-                    <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                      <img v-if="tourDetailsForm.image" :src="tourDetailsForm.image" class="avatar">
+                    <div :span="24">
+                      <img v-if="tourDetailsForm.image" :src="getImage()" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                    </el-upload>
+                    </div>
+                    <div slot="tip" class="el-upload__tip">{{ fileName }}</div>
+                    <el-button class="mt-4" size="small" type="primary" @click.native="onFocus">Click to upload</el-button>
+                    <input hidden type="file" :accept="accept" :multiple="false" :disabled="disabled" ref="fileInput" @change="onFileChange" />
                   </div>
                 </el-col>
               </el-form-item>
@@ -73,6 +76,31 @@ import service from '../services';
 import * as moment from 'moment';
 
 export default {
+  props: {
+    value: {
+      type: [Array, String]
+    },
+    accept: {
+      type: String,
+      default: "*"
+    },
+    label: {
+      type: String,
+      default: "Xin chọn ảnh..."
+    },
+    required: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    multiple: {
+      type: Boolean, // not yet possible because of data
+      default: false
+    }
+  },
   data() {
     var check = (rule, value, callback) => {
       if (!value) {
@@ -80,10 +108,25 @@ export default {
       }
       callback();
     }
+    var checkTotalTime = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('Please input the total time'));
+      }
+      setTimeout(() => {
+        if (!Number.isInteger(value)) {
+          callback(new Error('Please input digits'));
+        } else {
+          if (value < 0) {
+            callback(new Error('Total time must be greater than 0'));
+          } else {
+            callback();
+          }
+        }
+      }, 1000);
+    };
     return {
-      pathImage: 'http://localhost:8080/upload/',
-      fileImage: File,
-      activeName: 'first',
+      fileName: '',
+      fileImage: '',
       moreDetails: [],
       optionsTransport: [],
       optionsJourney: [],
@@ -111,16 +154,16 @@ export default {
       }],
       rules: {
         tourTypeId: [
-          { validator: check, trigger: 'change' }
+          { required: true, validator: check, trigger: 'change' }
         ],
         transportId: [
-          { validator: check, trigger: 'change' }
+          { required: true, validator: check, trigger: 'change' }
         ],
         departureId: [
-          { validator: check, trigger: 'change' }
+          { required: true, validator: check, trigger: 'change' }
         ],
         journeyId: [
-          { validator: check, trigger: 'change' }
+          { required: true, validator: check, trigger: 'change' }
         ],
         introduction: [
           { required: true, message: 'Please input introduction', trigger: 'blur' },
@@ -129,10 +172,20 @@ export default {
           { required: true, message: 'Please input detail', trigger: 'blur' },
         ],
         totalTime: [
-          { required: true, message: 'Please input total time', trigger: 'blur' },
+          { validator: checkTotalTime, trigger: 'blur' }
         ],
       },
     };
+  },
+  watch: {
+    value(v) {
+      this.fileName = v;
+    }
+  },
+  computed: {
+    avatarSize() {
+      return `150px`;
+    }
   },
   mounted() {
     moment.locale('vi');
@@ -158,22 +211,33 @@ export default {
     });
   },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.tourDetailsForm.image = URL.createObjectURL(file.raw);
-      this.fileImage = file.raw;
+    getFormData(files) {
+      const data = new FormData();
+      [...files].forEach(file => {
+        data.append('data', file, file.name); // currently only one file at a time
+      });
+      return data;
     },
-    beforeAvatarUpload(file) {
-      // DOM updated
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('The picture must be JPG format!');
+    onFocus() {
+      if (!this.disabled) {
+        this.$refs.fileInput.click();
       }
-      if (!isLt2M) {
-        this.$message.error('The picture size can not exceed 2MB!');
+    },
+    onFileChange($event) {
+      const files = $event.target.files || $event.dataTransfer.files;
+      const form = this.getFormData(files);
+      if (files) {
+        if (files.length > 0) {
+          this.fileName = [...files].map(file => file.name).join(', ');
+        } else {
+          this.fileName = null;
+        }
+      } else {
+        this.fileName = $event.target.value.split('\\').pop();
       }
-      return isJPG && isLt2M;
+      this.$emit('input', this.fileName);
+      this.$emit('formData', form);
+      this.fileImage = files[0];
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -188,7 +252,6 @@ export default {
           delete tour.departureId;
           delete tour.transportId;
           delete tour.journeyId;
-          console.log(tour);
           service.createTour(tour, this.fileImage).then((response) => {
             if (response.status === 200) {
               this.$message.success('Create successed!');
@@ -241,25 +304,6 @@ export default {
   border-radius: 4px;
 }
 
-.avatar-content {
-  padding: 0 10px 10px 10px;
-  margin-top: 10px;
-  text-align: center;
-  /* box-shadow: 0 2px 18px #E5E5E5; */
-}
-
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.avatar-uploader .el-upload:hover {
-  border-color: #20a0ff;
-}
-
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
@@ -267,13 +311,25 @@ export default {
   height: 150px;
   line-height: 150px;
   text-align: center;
+  border: 1px solid
 }
 
 .avatar {
   width: 150px;
   height: 150px;
   display: block;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  text-align: center;
 }
+
 
 .full-width {
   width: 100%;

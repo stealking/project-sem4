@@ -6,31 +6,31 @@ div
       .text.bold.s7 Tour giảm giá sốc
       .design.row.fw
         .design.center.p1
-          Info
+          Info(image="https://media.timeout.com/images/101602611/image.jpg")
         .design.center.p1
-          Info
+          Info(image="http://www.bakermckenzie.com/-/media/images/locations/vietnam1.jpg")
         .design.center.p1
-          Info
+          Info(image="https://www.i-to-i.com/wp-content/uploads/2016/03/vietnam-header.jpg")
+      .design
+         .text.bold.s4.more Xem thêm...
+    .design.p1
+      .text.bold.s7 Tour hot
+      .design.row.fw
+        .design.center.p1
+          Info(image="https://www.adb.org/sites/default/files/styles/content_media/public/content-media/11576-ha-noi-viet-nam.jpg?itok=Oras3xig")
+        .design.center.p1
+          Info(image="http://www.hitt-initiative.org/wp/wp-content/uploads/2011/03/vietnam_head_large.jpg")
+        .design.center.p1
+          Info(image="https://media.timeout.com/images/101602611/image.jpg")
       .design
          .text.bold.s4.more Xem thêm...
     .design.p1
       .text.bold.s7 Tour giảm giá sốc
       .design.row.fw
         .design.center.p1
-          Info
+          Info(image="https://media.timeout.com/images/101602611/image.jpg")
         .design.center.p1
-          Info
-        .design.center.p1
-          Info
-      .design
-         .text.bold.s4.more Xem thêm...
-    .design.p1
-      .text.bold.s7 Tour giảm giá sốc
-      .design.row.fw
-        .design.center.p1
-          Info
-        .design.center.p1
-          Info
+          Info(image="https://media.timeout.com/images/101602611/image.jpg")
         .design.center.p1
           Info
       .design

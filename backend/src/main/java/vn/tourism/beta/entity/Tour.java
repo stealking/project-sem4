@@ -23,19 +23,19 @@ public class Tour {
     @Column(name = "saleOff")
     private Boolean saleOff;
 
-    @Column(name = "image", length = 50)
+    @Column(name = "image")
     private String image;
 
-    @Column(name = "introduction", length = 300)
+    @Column(name = "introduction")
     private String introduction;
 
-    @Column(name = "detail", length = 500)
+    @Column(name = "detail")
     private String detail;
 
-    @Column(name = "summary", length = 500)
+    @Column(name = "summary")
     private String summary;
 
-    @Column(name = "policy", length = 500)
+    @Column(name = "policy")
     private String policy;
 
 

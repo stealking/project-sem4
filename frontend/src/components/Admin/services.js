@@ -439,11 +439,12 @@ export default {
       console.log('Fetch Error :-S', err);
     });
   },
-  createTourDetails(tourDetails) {
+  createTourDetails(tourDetails, tourId) {
     const newTourDetail = JSON.stringify(tourDetails);
+
     return axios({
       method: 'post',
-      url: `${url}/custom-api/tourDetails`,
+      url: `${url}/custom-api/tourDetails?tour_id=${tourId}`,
       data: newTourDetail,
       headers: {
         'content-type': 'application/json',
@@ -451,11 +452,11 @@ export default {
       },
     }).then(response => response);
   },
-  updateTourDetails(tourDetails) {
+  updateTourDetails(tourDetails, tourId) {
     const newTour = JSON.stringify(tourDetails);
     return axios({
       method: 'patch',
-      url: `${url}/custom-api/tourDetails`,
+      url: `${url}/custom-api/tourDetails?tour_id=${tourId}`,
       data: newTour,
       headers: {
         'content-type': 'application/json',

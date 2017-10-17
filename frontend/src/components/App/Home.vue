@@ -36,7 +36,8 @@ div.contain(style="max-width: 100%")
                     v-flex(xs10)
                       v-select(dark v-bind:items='states', v-model='e1', label='Thời gian', single-line, auto, hide-details)
                 v-flex(xs12 sm3 light)
-                  v-btn.select-layout.search-button.white--text.blue.darken-1(large) Tìm kiếm
+                  .mr3.ml3
+                    v-btn.select-layout.search-button.white--text.blue.darken-1(large) Tìm kiếm
 
     HomeBody
   _Footer
@@ -57,22 +58,16 @@ export default {
       title: 'Your Logo',
       items: [
         {
-          src: '/static/1.jpg',
+          src: 'http://www.bakermckenzie.com/-/media/images/locations/vietnam1.jpg',
         },
         {
-          src: '/static/1.jpg',
-        },
-        {
-          src: '/static/1.jpg',
-        },
-        {
-          src: '/static/1.jpg',
+          src: 'https://i.ytimg.com/vi/sTFZslRe5Kg/maxresdefault.jpg',
         },
       ],
       states: [
-        'Alabama', 'Alaska', 'American Samoa', 'Arizona',
+        'Alabama', 'Alaska',
       ],
-      tabs: ['TÌM TOUR', 'TÌM KHÁCH SẠN', 'TÌM VÉ'],
+      tabs: ['TÌM TOUR'],
       active: null,
       text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
     };

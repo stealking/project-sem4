@@ -102,7 +102,7 @@ doctype html
               v-_card.m1(flat='').removeYPaddingYMarginOnVeryNarrow
                 v-_card.m1-text {{ text }}
     .design.sidebar.mr1
-      .text fagdfgdaf
+      .text Quảng cáo
   .design.row.columnOnNarrow.center.fw
     Info
     Info
@@ -170,11 +170,11 @@ export default {
 .sidebar
   width 300px
   height 1000px
-  background-color #13ce66
+  /*background-color #13ce66*/
   @media(max-width: 1024px)
     display none
 .tour-image
-  background-color #4F0112
+  background-image url('http://www.hitt-initiative.org/wp/wp-content/uploads/2011/03/vietnam_head_large.jpg')
   min-height 200px
 
 .tour-detail

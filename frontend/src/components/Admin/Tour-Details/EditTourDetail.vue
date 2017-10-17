@@ -135,7 +135,7 @@ export default {
           delete tourDetails.voucherContent;
           delete tourDetails.voucherId;
           tourDetails.departmentDate = moment(tourDetails.departmentDate).format();
-          service.updateTourDetails(tourDetails).then((response) => {
+          service.updateTourDetails(tourDetails, this.tourId).then((response) => {
             if (response.status === 200) {
               this.$message.success('Update successed!');
             } else {

@@ -219,16 +219,16 @@ export default {
     },
     beforeAvatarUpload(file) {
       // DOM updated
-      const isJPG = file.type === 'image/jpeg';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('The picture must be JPG format!');
-      }
-      if (!isLt2M) {
-        this.$message.error('The picture size can not exceed 2MB!');
-      }
-      return isJPG && isLt2M;
+//      const isJPG = file.type === 'image/jpeg';
+//      const isLt2M = file.size / 1024 / 1024 < 2;
+//
+//      if (!isJPG) {
+//        this.$message.error('The picture must be JPG format!');
+//      }
+//      if (!isLt2M) {
+//        this.$message.error('The picture size can not exceed 2MB!');
+//      }
+//      return isJPG && isLt2M;
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {

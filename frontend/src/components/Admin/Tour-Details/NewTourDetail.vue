@@ -116,6 +116,7 @@ export default {
         this.options.push({ value: element.id, label: element.content });
       }, this);
     });
+    console.log(this.options);
   },
   methods: {
     handleClick(tab, event) {
@@ -129,7 +130,9 @@ export default {
           delete tourDetails.voucherContent;
           delete tourDetails.voucherId;
           tourDetails.departmentDate = moment(tourDetails.departmentDate).format();
-          service.createTourDetails(tourDetails).then((response) => {
+          let tourId= parseInt(tourDetails.tour.id);
+          console.log(tourDetails)
+          service.createTourDetails(tourDetails, tourId).then((response) => {
             if (response.status === 200) {
               this.$message.success('Update successed!');
               this.back();

@@ -1,7 +1,7 @@
 <template lang="pug">
 doctype html
 ._parent(@click='_onclick').sd.m1.removeYPaddingYMarginOnVeryNarrow
-  .child.bg-one
+  .child(:style="{ backgroundImage: 'url(' + image + ')' }")
     a.label.p1
       .text.s6.tsd 3 ngay 2 dem
       .text.s5.tsd Từ 3.000.000 vnd
@@ -11,7 +11,7 @@ doctype html
 <script>
 
 export default {
-  props: ['onclick'],
+  props: ['onclick', 'image'],
   methods: {
     _onclick() {
       this.$emit('onclick');
@@ -60,10 +60,6 @@ export default {
   background-size: cover;
   background-repeat: no-repeat;
   transition: all .5s;
-
-
-.bg-one {background-image: url(https://media.timeout.com/images/101602611/image.jpg);}
-
 
 
 ._parent:hover .child, ._parent:focus .child

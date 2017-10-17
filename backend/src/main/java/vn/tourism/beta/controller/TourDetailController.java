@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import vn.tourism.beta.entity.Tour;
 import vn.tourism.beta.entity.TourDetail;
 import vn.tourism.beta.entity.User;
 import vn.tourism.beta.repository.TourDetailRepository;
@@ -52,6 +53,9 @@ public class TourDetailController {
 
     @Autowired
     private TourDetailService tourDetailService;
+
+    @Autowired
+    private TourRepository tourRepository;
 
 
     @Secured("ROLE_ADMIN")
@@ -176,6 +180,7 @@ public class TourDetailController {
     @PostMapping(value = "custom-api/tourDetails")
     public ResponseEntity<?> addNewTourDetail(
             @RequestBody TourDetail tourDetail,
+            @RequestParam(name = "tour_id") Long tour_id,
             HttpServletRequest request
     ) {
         String header = request.getHeader("Authorization");
@@ -184,7 +189,9 @@ public class TourDetailController {
         User updateBy = userRepository.findByUsername(username);
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
+            Tour tour = tourRepository.findByIdAndEnableEquals(tour_id, true);
             tourDetail.setUpdatedOn(new Date());
+            tourDetail.setTour(tour);
 //            tourDetail.setUpdatedBy(updateBy);
             TourDetail addTourDetail = tourDetailRepository.save(tourDetail);
             responseHeaders.set("Content-Type", "application/json");
@@ -199,6 +206,7 @@ public class TourDetailController {
     @PatchMapping(value = "custom-api/tourDetails")
     public ResponseEntity<?> updateTourDetailById(
             @RequestBody TourDetail tourDetail,
+            @RequestParam(name = "tour_id") Long tour_id,
             HttpServletRequest request
     ) {
         String header = request.getHeader("Authorization");
@@ -208,6 +216,8 @@ public class TourDetailController {
         HttpHeaders responseHeaders = new HttpHeaders();
         try {
             tourDetail.setUpdatedOn(new Date());
+            Tour tour = tourRepository.findByIdAndEnableEquals(tour_id, true);
+            tourDetail.setTour(tour);
 //            tourDetail.setUpdatedBy(updateBy);
             TourDetail updatedTourDetail = tourDetailRepository.save(tourDetail);
             responseHeaders.set("Content-Type", "application/json");
